@@ -1,5 +1,5 @@
 import { Navbar } from "../components/Navbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,9 @@ export const CreateBlog = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = "Blogify | Publish Blog";
+  }, []);
 
   function PublishBlog() {
     axios

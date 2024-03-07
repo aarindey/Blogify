@@ -3,6 +3,7 @@ import { useBlog } from "../hooks";
 import { IndividualBlog } from "../components/IndividualBlog";
 import { Navbar } from "../components/Navbar";
 import { Spinner } from "../components/Spinner";
+import { useEffect } from "react";
 
 // good usecase of atomFamilies/selectorFamilies
 export const Blog = () => {
@@ -10,6 +11,9 @@ export const Blog = () => {
   const { loading, blog } = useBlog({
     id: id || "",
   });
+  useEffect(() => {
+    document.title = "Blogify | Blog Preview";
+  }, []);
   if (loading) {
     return (
       <div>

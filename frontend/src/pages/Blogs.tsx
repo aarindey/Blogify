@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BlogCard } from "../components/BlogCard";
 import { BlogSkeleton } from "../components/BlogSkeleton";
 import { Navbar } from "../components/Navbar";
@@ -14,6 +15,10 @@ interface Blog {
 
 export const Blogs = () => {
   const { loading, blogs } = useBlogs();
+
+  useEffect(() => {
+    document.title = "Blogify | Feed";
+  }, []);
 
   if (loading) {
     return (
