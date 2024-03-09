@@ -3,14 +3,17 @@ export declare const signUpBody: z.ZodObject<{
     username: z.ZodString;
     password: z.ZodString;
     name: z.ZodOptional<z.ZodString>;
+    bio: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     username: string;
     password: string;
     name?: string | undefined;
+    bio?: string | undefined;
 }, {
     username: string;
     password: string;
     name?: string | undefined;
+    bio?: string | undefined;
 }>;
 export type SignUpBody = z.infer<typeof signUpBody>;
 export declare const signInBody: z.ZodObject<{

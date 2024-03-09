@@ -10,9 +10,14 @@ export const Navbar = ({
   onClick?: MouseEventHandler<Element>;
 }) => {
   return (
-    <nav className="fixed w-full bg-white border-b flex justify-between items-center px-10 py-2">
+    <nav className="fixed w-full bg-white border-b flex justify-between items-center px-10">
       <Link to={"/blogs"}>
-        <div className="text-xl font-bold cursor-pointer">Medium</div>
+        <div className="flex justify-center items-center w-10 h-10 m-2">
+          <img src="../../public/vite.svg" className="rounded-xl"></img>
+          <div className="text-xl font-bold cursor-pointer text-orange-500 m-1">
+            Blogify
+          </div>
+        </div>
       </Link>
 
       <div className="flex">
@@ -21,7 +26,7 @@ export const Navbar = ({
           <Link to={"/create"}>
             <button
               type="button"
-              className="mt-1 text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-700 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2"
+              className="mt-1 text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-400 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2"
             >
               {buttonText}
             </button>
@@ -31,7 +36,7 @@ export const Navbar = ({
           <button
             onClick={onClick}
             type="button"
-            className="mt-1 text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-700 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2"
+            className="mt-1 text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-400 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2"
           >
             {buttonText}
           </button>

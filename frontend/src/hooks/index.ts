@@ -8,6 +8,7 @@ interface Blog {
   content: string;
   author: {
     name: string;
+    bio: string;
   };
 }
 

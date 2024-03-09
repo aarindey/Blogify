@@ -11,6 +11,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
     name: "",
     username: "",
     password: "",
+    bio: "",
   });
 
   async function sendRequest() {
@@ -76,6 +77,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
             setPostInputs({ ...postInputs, username: e.target.value });
           }}
         ></LabelledInput>
+
         <LabelledInput
           type="password"
           label="Password"
@@ -84,6 +86,17 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
             setPostInputs({ ...postInputs, password: e.target.value });
           }}
         ></LabelledInput>
+
+        {isSignup && (
+          <LabelledInput
+            type="text"
+            label="Bio"
+            placeholder="Describe yourself in few words"
+            onChange={(e) => {
+              setPostInputs({ ...postInputs, bio: e.target.value });
+            }}
+          ></LabelledInput>
+        )}
         <button
           type="button"
           onClick={sendRequest}

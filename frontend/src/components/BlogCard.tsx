@@ -17,7 +17,7 @@ export const BlogCard = ({
 }: BlogCardProps) => {
   return (
     <Link to={`/blog/${id}`}>
-      <div className="border-b border-slate-300 p-4 w-screen max-w-screen-lg cursor-pointer">
+      <div className="border-b border-slate-300 p-4 cursor-pointer bg-slate-200 rounded-lg md:mx-7 my-2">
         <div className="flex">
           <div className="flex justify-center flex-col">
             <Avatar authorName={authorName}></Avatar>
@@ -43,10 +43,10 @@ export const BlogCard = ({
 };
 
 export function Avatar({
-  authorName,
+  authorName = "Anonymous",
   padding,
 }: {
-  authorName: string;
+  authorName?: string;
   padding?: string;
 }) {
   const name = authorName.split(" ");

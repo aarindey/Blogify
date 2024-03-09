@@ -18,6 +18,7 @@ model User {
   name     String?
   username String  @unique
   password String
+  bio      String? 
   blogs    Blog[]
 }
 
@@ -30,3 +31,10 @@ model Blog {
   userId    Int?
   author    User    @relation(fields: [authorId], references: [id])
 }
+
+// model Topic {
+//   id          Int    @id @default(autoincrement())
+//   name        String
+//   blogsCount  Int
+//   followCount Int
+// }

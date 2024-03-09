@@ -28,6 +28,7 @@ userRouter.post("/signup", async (c) => {
         username: body.username,
         password: body.password,
         name: body.name,
+        bio: body.bio,
       },
     });
 
