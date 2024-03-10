@@ -7,6 +7,7 @@ interface Blog {
   title: string;
   content: string;
   author: {
+    id?: number;
     name: string;
     bio: string;
   };
@@ -50,4 +51,39 @@ export const useBlog = ({ id }: { id: string }) => {
   }, [id]);
 
   return { loading, blog };
+};
+
+interface Topic {
+  id: number;
+  name: string;
+}
+
+interface User {
+  id: number;
+  name: string;
+  bio: string;
+}
+
+export const useTopic = ({ id }: { id: string }) => {
+  const [loading, setLoading] = useState(true);
+  const [topic, setTopic] = useState<Topic>();
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    axios
+      .get(`${BACKEND_URL}/api/v1/topic/${id}`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        setTopic(response.data.topic);
+        setBlogs(response.data.blogs);
+        setUsers(response.data.users);
+        setLoading(false);
+      });
+  }, [id]);
+
+  return { loading, topic, blogs, users };
 };

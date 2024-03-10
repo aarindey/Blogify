@@ -44,18 +44,34 @@ blogRouter.post("/", async (c) => {
       c.status(411);
       return c.json({ message: "Zod Validation failed!" });
     }
+
     const authorId = c.get("userId");
+    // Create the blog post
     const blog = await prisma.blog.create({
       data: {
-        content: body.content,
         title: body.title,
+        content: body.content,
         authorId: Number(authorId),
+        topics: {
+          connectOrCreate: body.topics.map((topic: string) => ({
+            where: { name: topic.trim().toLowerCase() }, // Ensure topics are trimmed and lowercase
+            create: { name: topic.trim().toLowerCase() },
+          })),
+        },
       },
     });
-    return c.json({ id: blog.id, message: "Blog successfully created!" });
+    return c.json({
+      success: true,
+      id: blog.id,
+      message: "Blog successfully created!",
+    });
   } catch (error) {
     c.status(500);
-    return c.json({ error: error, message: "Blog creation failed" });
+    return c.json({
+      success: false,
+      error: error,
+      message: "Blog creation failed",
+    });
   }
 });
 

@@ -18,8 +18,9 @@ model User {
   name     String?
   username String  @unique
   password String
-  bio      String? 
+  bio      String?
   blogs    Blog[]
+  topics   Topic[]
 }
 
 model Blog {
@@ -30,11 +31,12 @@ model Blog {
   published Boolean @default(false)
   userId    Int?
   author    User    @relation(fields: [authorId], references: [id])
+  topics    Topic[]
 }
 
-// model Topic {
-//   id          Int    @id @default(autoincrement())
-//   name        String
-//   blogsCount  Int
-//   followCount Int
-// }
+model Topic {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  users User[]
+  blogs Blog[]
+}
