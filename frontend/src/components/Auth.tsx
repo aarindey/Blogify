@@ -29,11 +29,14 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   }
 
   return (
-    <div className="h-screen flex justify-center items-center flex-col">
+    <div className="h-screen flex justify-center items-center flex-col ">
+      <div className="flex"> </div>
       <div className="flex flex-col justify-center w-[24rem]">
         {isSignup && (
           <div>
-            <div className="text-3xl font-extrabold ">Create an account</div>
+            <div className="text-3xl font-extrabold text-orange-500 ">
+              Create an account
+            </div>
 
             <div className="text-slate-400">
               Already have an account?{" "}
@@ -46,7 +49,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
 
         {!isSignup && (
           <div>
-            <div className="text-3xl font-extrabold ">
+            <div className="text-3xl font-extrabold text-orange-500">
               Sign In to your account
             </div>
 
@@ -100,7 +103,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
         <button
           type="button"
           onClick={sendRequest}
-          className="mt-5 w-1/2 text-white bg-[#050708] hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#050708]/40 dark:focus:ring-gray-600 me-2 mb-2"
+          className="mt-5 w-1/2 text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items me-2 mb-2"
         >
           {isSignup ? "Sign Up" : "Sign In"}
         </button>
@@ -125,7 +128,7 @@ function LabelledInput({
   return (
     <div className="mt-2">
       <div>
-        <label className="block mb-2 text-sm font-medium text-gray-600 ml-1">
+        <label className="block mb-2 text-sm font-medium ml-1 text-orange-500">
           {label}
         </label>
         <input

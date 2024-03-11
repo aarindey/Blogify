@@ -17,7 +17,6 @@ export const Blog = () => {
   if (loading) {
     return (
       <div>
-        <Navbar></Navbar>
         <div className="h-screen flex justify-center items-center">
           <Spinner />
         </div>

@@ -31,14 +31,24 @@ topicRouter.use("/*", async (c, next) => {
   }
 });
 
-// Todo: Pagination
 topicRouter.get("/bulk", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
 
   try {
-    const topics = await prisma.topic.findMany({});
+    const topics = await prisma.topic.findMany({
+      orderBy: {
+        users: {
+          _count: "desc",
+        },
+      },
+      take: 30,
+      select: {
+        id: true,
+        name: true,
+      },
+    });
 
     return c.json({
       success: true,

@@ -146,8 +146,10 @@ blogRouter.get("/:id", async (c) => {
           select: {
             name: true,
             bio: true,
+            id: true,
           },
         },
+        topics: true,
       },
     });
     return c.json({ data: blog });

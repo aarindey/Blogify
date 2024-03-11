@@ -11,6 +11,10 @@ interface Blog {
     name: string;
     bio: string;
   };
+  topics?: {
+    id?: number;
+    name?: string;
+  }[];
 }
 
 export const useBlogs = () => {
@@ -86,4 +90,34 @@ export const useTopic = ({ id }: { id: string }) => {
   }, [id]);
 
   return { loading, topic, blogs, users };
+};
+
+interface Author {
+  id: number;
+  name: string;
+  bio: string;
+  blogs: { id: number; title: string; content: string }[];
+  following: { id: number; name: string; bio: string }[];
+  followers: { id: number; name: string; bio: string }[];
+  topics: { id: number; name: string }[];
+}
+
+export const useAuthor = ({ id }: { id: string }) => {
+  const [loading, setLoading] = useState(true);
+  const [author, setAuthor] = useState<Author>();
+
+  useEffect(() => {
+    axios
+      .get(`${BACKEND_URL}/api/v1/author/${id}`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        setAuthor(response.data.author);
+        setLoading(false);
+      });
+  }, [id]);
+
+  return { loading, author };
 };

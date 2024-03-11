@@ -1,13 +1,19 @@
-import { Avatar } from "./BlogCard";
+import { AuthorHeader } from "./AuthorHeader";
+import { Bubble } from "./Bubble";
 
 interface Blog {
   id: number;
   title: string;
   content: string;
   author: {
+    id?: number;
     bio: string;
     name: string;
   };
+  topics?: {
+    id?: number;
+    name?: string;
+  }[];
 }
 
 export const IndividualBlog = ({ blog }: { blog: Blog }) => {
@@ -19,19 +25,23 @@ export const IndividualBlog = ({ blog }: { blog: Blog }) => {
         <div className="pt-4">{blog.content}</div>
       </div>
       <div className="w-1/4 mt-10 hidden lg:block">
-        <div className="text-slate-600 text-lg ml-6">Author</div>
-        <div className="flex flex-col justify-center items-center">
-          <div className="flex items-center gap-3">
-            <Avatar
-              authorName={blog.author.name || "Anonymous"}
-              padding="p-5"
-            />
+        <div className="flex flex-col justify-center">
+          {" "}
+          <div className="text-slate-600 text-lg ml-6">Author</div>
+          <div>
             <div>
-              <div className="text-xl font-bold pt-2">
-                {blog.author.name || "Anonymous"}
-              </div>
-              <div className="pt-2 text-slate-500">{blog.author.bio}</div>
+              <AuthorHeader
+                id={blog.author.id || 0}
+                name={blog.author.name}
+                bio={blog.author.bio}
+              ></AuthorHeader>
             </div>
+          </div>
+          <div className="text-slate-600 text-lg ml-6">Topics</div>
+          <div className="flex flex-wrap px-3 py-3 bg-slate-100 rounded-lg">
+            {blog?.topics?.map((topic) => (
+              <Bubble name={topic.name || ""} id={topic.id || 1}></Bubble>
+            ))}
           </div>
         </div>
       </div>

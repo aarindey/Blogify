@@ -14,13 +14,15 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  name     String?
-  username String  @unique
-  password String
-  bio      String?
-  blogs    Blog[]
-  topics   Topic[]
+  id        Int     @id @default(autoincrement())
+  name      String?
+  username  String  @unique
+  password  String
+  bio       String?
+  blogs     Blog[]
+  topics    Topic[]
+  following User[]  @relation("Follows")
+  followers User[]  @relation("Follows")
 }
 
 model Blog {
@@ -29,7 +31,6 @@ model Blog {
   content   String
   title     String
   published Boolean @default(false)
-  userId    Int?
   author    User    @relation(fields: [authorId], references: [id])
   topics    Topic[]
 }

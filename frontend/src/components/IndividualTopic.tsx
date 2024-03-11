@@ -1,7 +1,7 @@
 import { BlogCard } from "./BlogCard";
 import { Navbar } from "./Navbar";
-import { SideBar } from "./SideBar";
 import { TopicHeader } from "./TopicHeader";
+import { TopicSideBar } from "./TopicSideBar";
 
 export const IndividualTopic = ({
   id,
@@ -52,7 +52,7 @@ export const IndividualTopic = ({
           )}
         </div>
         <div className="w-1/4 md:mr-7 hidden md:block">
-          <SideBar></SideBar>
+          <TopicSideBar users={users}></TopicSideBar>
         </div>
       </div>
     </div>

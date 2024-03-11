@@ -63,7 +63,7 @@ export const Blogs = () => {
           )}
         </div>
         <div className="w-1/4 md:mr-7 hidden md:block">
-          <SideBar />
+          <SideBar type={"general"} />
         </div>
       </div>
     </div>
