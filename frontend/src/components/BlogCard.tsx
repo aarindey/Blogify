@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Spinner } from "./Spinner";
 
 interface BlogCardProps {
   id: number;
@@ -43,12 +44,25 @@ export const BlogCard = ({
 };
 
 export function Avatar({
+  showSpinner = false,
   authorName = "Anonymous",
   padding,
 }: {
+  showSpinner?: boolean;
   authorName?: string;
   padding?: string;
 }) {
+  if (showSpinner) {
+    return (
+      <div
+        className={`${padding} inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600`}
+      >
+        <span className="text-xs text-gray-600 dark:text-gray-300">
+          <Spinner size={4} />
+        </span>
+      </div>
+    );
+  }
   const name = authorName.split(" ");
   const initials = name.length > 1 ? name[0][0] + "." + name[1][0] : name[0][0];
   return (

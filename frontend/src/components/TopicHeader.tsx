@@ -1,6 +1,7 @@
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { useEffect, useState } from "react";
+import { Spinner } from "./Spinner";
 
 export const TopicHeader = ({
   id,
@@ -14,6 +15,7 @@ export const TopicHeader = ({
   stories: number;
 }) => {
   const [followed, setFollowed] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // to find if the user is already following the topic or not
   useEffect(() => {
@@ -26,6 +28,7 @@ export const TopicHeader = ({
       })
       .then((response) => {
         setFollowed(response.data.following);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching initial followed state:", error);
@@ -33,6 +36,7 @@ export const TopicHeader = ({
   }, [id]);
 
   function toggleFollow() {
+    setLoading(true);
     if (followed) {
       axios
         .post(
@@ -44,7 +48,10 @@ export const TopicHeader = ({
             },
           }
         )
-        .then(() => setFollowed(false));
+        .then(() => {
+          setFollowed(false);
+          setLoading(false);
+        });
     } else {
       axios
         .post(
@@ -56,7 +63,10 @@ export const TopicHeader = ({
             },
           }
         )
-        .then(() => setFollowed(true));
+        .then(() => {
+          setFollowed(true);
+          setLoading(false);
+        });
     }
   }
   return (
@@ -78,23 +88,31 @@ export const TopicHeader = ({
             : `${stories} Stories`}
         </p>
       </div>
-      {!followed && (
-        <button
-          type="button"
-          onClick={toggleFollow}
-          className="mt-5 rounded-3xl text-white bg-[#050708] hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center"
-        >
-          Follow
+      {loading ? (
+        <button className="mt-5 rounded-3xl text-white bg-gray-400 text-sm px-8 py-3 text-center inline-flex items-center">
+          <Spinner size={4}></Spinner>
         </button>
-      )}
-      {followed && (
-        <button
-          type="button"
-          onClick={toggleFollow}
-          className="mt-5 rounded-3xl text-white bg-slate-500 hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center"
-        >
-          Unfollow
-        </button>
+      ) : (
+        <>
+          {!followed && (
+            <button
+              type="button"
+              onClick={toggleFollow}
+              className="mt-5 rounded-3xl text-white bg-[#050708] hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center"
+            >
+              Follow
+            </button>
+          )}
+          {followed && (
+            <button
+              type="button"
+              onClick={toggleFollow}
+              className="mt-5 rounded-3xl text-white bg-slate-500 hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center"
+            >
+              Unfollow
+            </button>
+          )}
+        </>
       )}
     </div>
   );

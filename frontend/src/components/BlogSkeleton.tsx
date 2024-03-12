@@ -9,7 +9,9 @@ export const BlogSkeleton = () => {
           <div className="h-2 bg-gray-200 rounded-full mb-2.5"></div>
           <div className="h-2 bg-gray-200 rounded-full mb-2.5"></div>
           <div className="flex-col pl-2 flex justify-center">
-            <Circle />
+            <div className="ml-20 flex items-center justify-center">
+              <Circle />
+            </div>
           </div>
           <div className="pl-2 font-thin text-slate-500 text-sm flex justify-center flex-col">
             <div className="h-2 bg-gray-200 rounded-full mb-2.5"></div>

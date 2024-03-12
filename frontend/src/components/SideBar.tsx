@@ -4,6 +4,7 @@ import { AuthorHeader } from "./AuthorHeader";
 import axios from "axios";
 import { Bubble } from "./Bubble";
 import { EliteAuthors } from "./EliteAuthors";
+import { Spinner } from "./Spinner";
 
 interface Topic {
   id: number;
@@ -23,6 +24,7 @@ export const SideBar = ({
   type?: string;
 }) => {
   const [topics, setTopics] = useState<Topic[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function sendRequest() {
@@ -33,6 +35,7 @@ export const SideBar = ({
           },
         });
         setTopics(response.data.data);
+        setLoading(false);
       } catch (error) {
         console.log("Error while bulk topic request ", error);
       }
@@ -40,6 +43,30 @@ export const SideBar = ({
     sendRequest();
   }, []); // Empty dependency array to run the effect only once
 
+  if (loading) {
+    return (
+      <div>
+        {" "}
+        <div>
+          <div>Recommended Topics</div>
+          <div className="flex justify-center p-10 items-center w-40">
+            <Spinner />
+          </div>
+        </div>
+        <div>
+          {" "}
+          {type === "general" ? (
+            <div className="mt-2 mb-1">Recommended People</div>
+          ) : (
+            <div className="mt-2 mb-1">People following this Topic</div>
+          )}
+          <div className="flex justify-center p-10 items-center w-40">
+            <Spinner />
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div>
       <div>Recommended Topics</div>

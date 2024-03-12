@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Navbar } from "../components/Navbar";
-import { Spinner } from "../components/Spinner";
 import { useAuthor } from "../hooks";
 import { UserDetails } from "../components/UserDetails";
+import { UserSkeleton } from "../components/UserSkeleton";
 
 export const User = () => {
   const { id } = useParams();
@@ -14,14 +13,7 @@ export const User = () => {
     document.title = "Blogify | User Preview";
   }, []);
   if (loading) {
-    return (
-      <div>
-        <Navbar></Navbar>
-        <div className="h-screen flex justify-center items-center">
-          <Spinner />
-        </div>
-      </div>
-    );
+    return <UserSkeleton />;
   }
 
   return (

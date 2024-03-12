@@ -24,16 +24,18 @@ export const Blogs = () => {
   if (loading) {
     return (
       <div className="flex flex-col">
-        <div className="block overflow-visible">
-          <Navbar />
-        </div>
-
-        <div className="h-screen flex mt-[5rem] flex-col justify-center items-center">
-          <BlogSkeleton />
-          <BlogSkeleton />
-          <BlogSkeleton />
-          <BlogSkeleton />
-          <BlogSkeleton />
+        <Navbar />
+        <div className="flex mt-[4.5rem] justify-center">
+          <div className="w-full mx-4 md:m-0 md:w-3/4 py-2 pl-7">
+            <BlogSkeleton />
+            <BlogSkeleton />
+            <BlogSkeleton />
+            <BlogSkeleton />
+            <BlogSkeleton />
+          </div>
+          <div className="w-1/4 md:mr-7 hidden md:block">
+            <SideBar type={"general"} />
+          </div>
         </div>
       </div>
     );

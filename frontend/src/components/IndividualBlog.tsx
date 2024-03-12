@@ -42,6 +42,9 @@ export const IndividualBlog = ({ blog }: { blog: Blog }) => {
             {blog?.topics?.map((topic) => (
               <Bubble name={topic.name || ""} id={topic.id || 1}></Bubble>
             ))}
+            {blog?.topics?.length === 0 && (
+              <div className="p-4">No Topics to Display</div>
+            )}
           </div>
         </div>
       </div>

@@ -17,6 +17,7 @@ export const Navbar = ({
   onClick?: MouseEventHandler<Element>;
 }) => {
   const [user, setUser] = useState<User>();
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     try {
       axios
@@ -27,11 +28,13 @@ export const Navbar = ({
         })
         .then((response) => {
           setUser(response.data.user);
+          setLoading(false);
         });
     } catch (error) {
       console.log("some error occured");
     }
   }, []);
+
   return (
     <nav className="fixed w-full bg-white border-b flex justify-between items-center px-10">
       <Link to={"/blogs"}>
@@ -64,9 +67,16 @@ export const Navbar = ({
             {buttonText}
           </button>
         )}
-        <Link to={`/user/${user?.id}`}>
-          <Avatar authorName={user?.name} padding="p-5" />
-        </Link>
+        {loading && (
+          <Link to={`/user/${user?.id}`}>
+            <Avatar authorName={user?.name} showSpinner={true} padding="p-5" />
+          </Link>
+        )}
+        {!loading && (
+          <Link to={`/user/${user?.id}`}>
+            <Avatar authorName={user?.name} padding="p-5" />
+          </Link>
+        )}
       </div>
     </nav>
   );
