@@ -22,6 +22,12 @@ export const blogUpdateBody = z.object({
   id: z.number(),
   title: z.string(),
   content: z.string(),
+  topics: z.array(
+    z.object({
+      id: z.number(),
+      name: z.string(),
+    })
+  ),
 });
 
 export type SignUpBody = z.infer<typeof signUpBody>;

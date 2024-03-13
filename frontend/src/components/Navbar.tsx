@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Avatar } from "./BlogCard";
 import { MouseEventHandler, useEffect, useState } from "react";
 import axios from "axios";
@@ -18,6 +18,7 @@ export const Navbar = ({
 }) => {
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   useEffect(() => {
     try {
       axios
@@ -35,6 +36,11 @@ export const Navbar = ({
     }
   }, []);
 
+  function handleLogOut() {
+    localStorage.removeItem("token");
+    navigate("/signup");
+  }
+
   return (
     <nav className="fixed w-full bg-white border-b flex justify-between items-center px-10">
       <Link to={"/blogs"}>
@@ -48,6 +54,14 @@ export const Navbar = ({
 
       <div className="flex">
         {" "}
+        <Link to="/blogs">
+          <button
+            type="button"
+            className="mt-1 text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-400 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2"
+          >
+            Blogs
+          </button>
+        </Link>
         {buttonText == "Write" && (
           <Link to={"/create"}>
             <button
@@ -67,6 +81,15 @@ export const Navbar = ({
             {buttonText}
           </button>
         )}
+        {
+          <button
+            onClick={handleLogOut}
+            type="button"
+            className="mt-1 text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-600 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2"
+          >
+            Log Out
+          </button>
+        }
         {loading && (
           <Link to={`/user/${user?.id}`}>
             <Avatar authorName={user?.name} showSpinner={true} padding="p-5" />

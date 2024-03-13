@@ -6,6 +6,7 @@ import { Blogs } from "./pages/Blogs";
 import { CreateBlog } from "./pages/CreateBlog";
 import { Topic } from "./pages/Topic";
 import { User } from "./pages/User";
+import { UpdateBlog } from "./pages/UpdateBlog";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/user/:id" element={<User />}></Route>
           <Route path="/blogs" element={<Blogs />}></Route>
           <Route path="/create" element={<CreateBlog />}></Route>
+          <Route path="/update/:id" element={<UpdateBlog />}></Route>
         </Routes>
       </BrowserRouter>
     </>
