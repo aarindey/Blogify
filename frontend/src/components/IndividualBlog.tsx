@@ -19,15 +19,34 @@ interface Blog {
   }[];
 }
 
-export const IndividualBlog = ({ blog }: { blog: Blog }) => {
+export const IndividualBlog = ({
+  blog,
+  imageUrl,
+  imageName,
+}: {
+  blog: Blog;
+  imageUrl: string;
+  imageName: string;
+}) => {
   const navigate = useNavigate();
-  function handleDelete() {
-    axios
-      .delete(`${BACKEND_URL}/api/v1/blog/delete/${blog.id}`, {
+  async function handleDelete() {
+    try {
+      await axios.delete(`${BACKEND_URL}/api/v1/blog/delete/${blog.id}`, {
         headers: { Authorization: localStorage.getItem("token") },
-      })
-      .then(() => navigate("/blogs"));
+      });
+
+      if (imageName != null && imageName != "") {
+        await axios.delete(
+          `http://127.0.0.1:3001/api/v1/deleteImg?imageName=${imageName}`
+        );
+      }
+
+      navigate("/blogs");
+    } catch (error) {
+      console.error("Error deleting blog or image:", error);
+    }
   }
+
   return (
     <div className="flex px-10 pt-12">
       <div className="flex flex-col w-full lg:w-3/4 justify-center px-4 py-6 m-4">
@@ -51,6 +70,14 @@ export const IndividualBlog = ({ blog }: { blog: Blog }) => {
         </div>
         <div className="text-slate-500 pt-4">Posted on 2nd Dec, 2020</div>
         <div className="pt-4">{blog.content}</div>
+        {imageUrl != "" && imageUrl != null && (
+          <img
+            className="mt-5"
+            id={String(blog.id)}
+            src={imageUrl}
+            alt="Dynamic Image"
+          ></img>
+        )}
       </div>
       <div className="w-1/4 mt-10 hidden lg:block">
         <div className="flex flex-col justify-center">

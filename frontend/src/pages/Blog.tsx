@@ -8,9 +8,11 @@ import { useEffect } from "react";
 // good usecase of atomFamilies/selectorFamilies
 export const Blog = () => {
   const { id } = useParams();
-  const { loading, blog } = useBlog({
+
+  const { loading, blog, imageUrl, imageName } = useBlog({
     id: id || "",
   });
+
   useEffect(() => {
     document.title = "Blogify | Blog Preview";
   }, []);
@@ -27,7 +29,9 @@ export const Blog = () => {
   return (
     <div>
       <Navbar />
-      {blog && <IndividualBlog blog={blog} />}
+      {blog && (
+        <IndividualBlog blog={blog} imageUrl={imageUrl} imageName={imageName} />
+      )}
     </div>
   );
 };

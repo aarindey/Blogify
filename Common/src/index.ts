@@ -16,6 +16,7 @@ export const blogPostBody = z.object({
   title: z.string(),
   content: z.string(),
   topics: z.array(z.string()),
+  imageName: z.string(),
 });
 
 export const blogUpdateBody = z.object({
@@ -28,6 +29,7 @@ export const blogUpdateBody = z.object({
       name: z.string(),
     })
   ),
+  imageName: z.string(),
 });
 
 export type SignUpBody = z.infer<typeof signUpBody>;

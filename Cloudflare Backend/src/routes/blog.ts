@@ -52,6 +52,7 @@ blogRouter.post("/", async (c) => {
         title: body.title,
         content: body.content,
         authorId: Number(authorId),
+        imageName: body.imageName,
         topics: {
           connectOrCreate: body.topics.map((topic: string) => ({
             where: { name: topic.trim().toLowerCase() }, // Ensure topics are trimmed and lowercase
@@ -99,6 +100,7 @@ blogRouter.put("/update", async (c) => {
       data: {
         title: body.title,
         content: body.content,
+        imageName: body.imageName,
       },
       include: {
         topics: true, // Include associated topics
@@ -304,6 +306,7 @@ blogRouter.get("/:id", async (c) => {
           },
         },
         topics: true,
+        imageName: true,
       },
     });
     return c.json({ data: blog });

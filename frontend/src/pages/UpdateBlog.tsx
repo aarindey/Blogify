@@ -6,10 +6,12 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 export const UpdateBlog = () => {
   const location = useLocation();
-    const { blog } = location.state;
+  const { blog } = location.state;
   const [title, setTitle] = useState(blog.title);
   const [content, setContent] = useState(blog.content);
   const [topics, setTopics] = useState(blog.topics);
+  const [file, setFile] = useState<File | undefined>();
+  const [imageName, setImageName] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
@@ -60,6 +62,7 @@ export const UpdateBlog = () => {
           title: title,
           content: content,
           topics: topics,
+          imageName: imageName,
         },
         {
           headers: {
@@ -71,6 +74,44 @@ export const UpdateBlog = () => {
         navigate(`/blog/${response?.data?.data?.id}`);
       });
   }
+
+  function generateFileName(length: number): string {
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+
+    for (let i = 0; i < length; i++) {
+      const timestampPart = Date.now().toString(36); // Convert timestamp to base36 string
+      const randomChar = chars.charAt(Math.floor(Math.random() * chars.length));
+      result += timestampPart.slice(-1) + randomChar; // Append last character of timestamp and a random character
+    }
+
+    return result.slice(0, length); // Trim the result to desired length
+  }
+
+  const imageSubmit = async (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    let fileName = blog.imageName;
+    setImageName(fileName);
+
+    const formData = new FormData();
+    formData.append("image", file as File);
+
+    if (fileName === "" || fileName === null) {
+      fileName = generateFileName(32);
+      setImageName(fileName);
+    }
+
+    if (fileName != null && fileName !== "") {
+      await axios.post(
+        `http://127.0.0.1:3001/api/v1/imgUpload?imageName=${fileName}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+    }
+  };
 
   return (
     <div>
@@ -96,6 +137,25 @@ export const UpdateBlog = () => {
             id="large-input"
             className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 h-[20rem]"
           ></textarea>
+          <form className="mt-4" onSubmit={imageSubmit}>
+            <input
+              onChange={(e) => {
+                const files = e.target.files;
+                if (files && files.length > 0) {
+                  const selectedFile = files[0] as File;
+                  setFile(selectedFile);
+                }
+              }}
+              type="file"
+              accept="image/*"
+            ></input>
+            <button
+              className="ml-2 bg-green-500 text-white px-4 py-1 rounded-lg"
+              type="submit"
+            >
+              Submit Image
+            </button>
+          </form>
           <label className="mt-4 block mb-2 text-sm font-medium text-gray-900">
             Topics ( Add one topic in each input box )
           </label>

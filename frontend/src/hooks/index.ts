@@ -40,21 +40,43 @@ export const useBlogs = () => {
 export const useBlog = ({ id }: { id: string }) => {
   const [loading, setLoading] = useState(true);
   const [blog, setBlog] = useState<Blog>();
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageName, setImageName] = useState<string>("");
 
   useEffect(() => {
-    axios
-      .get(`${BACKEND_URL}/api/v1/blog/${id}`, {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      })
-      .then((response) => {
-        setBlog(response.data.data);
+    const fetchBlogData = async () => {
+      try {
+        const blogResponse = await axios.get(
+          `${BACKEND_URL}/api/v1/blog/${id}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        );
+
+        const fetchedBlog = blogResponse.data.data;
+        setBlog(fetchedBlog);
+        const name = fetchedBlog.imageName;
+        setImageName(name);
+        if (name != null && name != "") {
+          const imageResponse = await axios.get(
+            `http://127.0.0.1:3001/api/v1/blogImg?imageName=${name}`
+          );
+
+          setImageUrl(imageResponse.data.imageUrl);
+        }
         setLoading(false);
-      });
+      } catch (error) {
+        console.error("Error fetching blog data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchBlogData();
   }, [id]);
 
-  return { loading, blog };
+  return { loading, blog, imageUrl, imageName };
 };
 
 interface Topic {
