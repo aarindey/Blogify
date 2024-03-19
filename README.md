@@ -1,0 +1,7 @@
+![SignIn](https://github.com/aarindey/Storify/assets/77115128/345aa0a5-3c72-4155-9fe4-73641249cefe)
+![SignUp](https://github.com/aarindey/Storify/assets/77115128/4aefa3be-4393-46f2-8836-9d185376eb9e)
+![Author](https://github.com/aarindey/Storify/assets/77115128/78b4d14a-dfb9-463d-b50b-271b018e4cf0)
+![Topic](https://github.com/aarindey/Storify/assets/77115128/f78623e8-a5ab-4c5d-980c-e313c93ec685)
+![CreateBlog](https://github.com/aarindey/Storify/assets/77115128/0685d3ba-c74d-4ae1-b0f3-ca2957d8b941)
+![Blog](https://github.com/aarindey/Storify/assets/77115128/550004fd-fd06-4570-bff1-8dc8f798ba04)
+![Feed](https://github.com/aarindey/Storify/assets/77115128/a238b467-6c50-4bde-87d7-e6f406915525)
