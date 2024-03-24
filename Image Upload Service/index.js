@@ -19,6 +19,7 @@ const bucketName = process.env.BUCKET_NAME;
 const region = process.env.BUCKET_REGION;
 const accessKeyId = process.env.ACCESS_KEY;
 const secretAccessKey = process.env.SECRET_ACCESS_KEY;
+const PORT = process.env.PORT || 3001;
 const endpoint = `https://${process.env.ACCOUNT_ID}.r2.cloudflarestorage.com`;
 
 const storage = multer.memoryStorage();
@@ -32,9 +33,6 @@ const s3Client = new S3Client({
     secretAccessKey,
   },
 });
-
-// const generateFileName = (bytes = 32) =>
-//   crypto.randomBytes(bytes).toString("hex");
 
 app.use(cors());
 app.post("/api/v1/imgUpload", upload.single("image"), async (req, res) => {
@@ -106,6 +104,6 @@ app.delete("/api/v1/deleteImg", async (req, res) => {
   });
 });
 
-app.listen(3001, () => {
-  console.log("App is listening at port 3001");
+app.listen(PORT, () => {
+  console.log(`App is listening at port ${PORT}`);
 });
