@@ -1,6 +1,6 @@
 import { Navbar } from "../components/Navbar";
 import { useEffect, useState } from "react";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL, IMAGE_SERVICE_URL } from "../config";
 import axios from "axios";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
@@ -104,7 +104,7 @@ export const UpdateBlog = () => {
 
     if (fileName != null && fileName !== "") {
       await axios.post(
-        `http://127.0.0.1:3001/api/v1/imgUpload?imageName=${fileName}`,
+        `${IMAGE_SERVICE_URL}/api/v1/imgUpload?imageName=${fileName}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

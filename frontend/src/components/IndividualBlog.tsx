@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { AuthorHeader } from "./AuthorHeader";
 import { Bubble } from "./Bubble";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL, IMAGE_SERVICE_URL } from "../config";
 import axios from "axios";
 
 interface Blog {
@@ -37,7 +37,7 @@ export const IndividualBlog = ({
 
       if (imageName != null && imageName != "") {
         await axios.delete(
-          `http://127.0.0.1:3001/api/v1/deleteImg?imageName=${imageName}`
+          `${IMAGE_SERVICE_URL}/api/v1/deleteImg?imageName=${imageName}`
         );
       }
 

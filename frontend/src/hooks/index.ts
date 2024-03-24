@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL, IMAGE_SERVICE_URL } from "../config";
 
 interface Blog {
   id: number;
@@ -61,7 +61,7 @@ export const useBlog = ({ id }: { id: string }) => {
         setImageName(name);
         if (name != null && name != "") {
           const imageResponse = await axios.get(
-            `http://127.0.0.1:3001/api/v1/blogImg?imageName=${name}`
+            `${IMAGE_SERVICE_URL}/api/v1/blogImg?imageName=${name}`
           );
 
           setImageUrl(imageResponse.data.imageUrl);
