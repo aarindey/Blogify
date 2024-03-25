@@ -42,7 +42,7 @@ export const Navbar = ({
   }
 
   return (
-    <nav className="fixed w-full bg-white border-b flex justify-between items-center px-10">
+    <nav className="fixed absoluet z-50 w-full bg-white border-b flex justify-between items-center px-10">
       <Link to={"/blogs"}>
         <div className="flex justify-center items-center w-10 h-10 m-2">
           <img src="../../vite.svg" className="rounded-xl" alt="logo"></img>

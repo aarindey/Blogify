@@ -97,6 +97,7 @@ topicRouter.get("/:id", async (c) => {
         id: true,
         title: true,
         content: true,
+        date: true,
         author: {
           select: {
             id: true,

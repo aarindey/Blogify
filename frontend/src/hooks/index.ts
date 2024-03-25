@@ -21,27 +21,34 @@ interface Blog {
 export const useBlogs = ({
   page = 1,
   limit = 5,
+  fetchType = "All",
 }: {
   page: number;
   limit: number;
+  fetchType: string;
 }) => {
   const [loading, setLoading] = useState(true);
   const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [pages, setPages] = useState<number>();
 
   useEffect(() => {
     axios
-      .get(`${BACKEND_URL}/api/v1/blog/bulk?page=${page}&limit=${limit}`, {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      })
+      .get(
+        `${BACKEND_URL}/api/v1/blog/fetch?page=${page}&limit=${limit}&type=${fetchType}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      )
       .then((response) => {
         setBlogs(response.data.data);
+        setPages(response.data.totalPages);
         setLoading(false);
       });
-  }, [limit, page]);
+  }, [limit, page, fetchType]);
 
-  return { loading, setLoading, blogs };
+  return { loading, blogs, pages };
 };
 
 export const useBlog = ({ id }: { id: string }) => {
@@ -125,7 +132,7 @@ interface Author {
   id: number;
   name: string;
   bio: string;
-  blogs: { id: number; title: string; content: string }[];
+
   following: { id: number; name: string; bio: string }[];
   followers: { id: number; name: string; bio: string }[];
   topics: { id: number; name: string }[];
@@ -149,4 +156,37 @@ export const useAuthor = ({ id }: { id: string }) => {
   }, [id]);
 
   return { loading, author };
+};
+
+export const useAuthorBlogs = ({
+  id,
+  page,
+  limit,
+}: {
+  id: string;
+  page: number;
+  limit: number;
+}) => {
+  const [blogsLoading, setBlogsLoading] = useState(true);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [pages, setPages] = useState<number>();
+
+  useEffect(() => {
+    axios
+      .get(
+        `${BACKEND_URL}/api/v1/author/${id}/blogs?page=${page}&limit=${limit}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((response) => {
+        setBlogs(response.data.blogs);
+        setPages(response.data.totalPages);
+        setBlogsLoading(false);
+      });
+  }, [id, limit, page]);
+
+  return { blogsLoading, setBlogsLoading, blogs, pages };
 };

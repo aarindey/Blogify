@@ -5,7 +5,10 @@ import { Spinner } from "./Spinner";
 export const UserSkeleton = () => {
   return (
     <div className="flex flex-col">
-      <Navbar />
+      <div className="absolute z-50">
+        {" "}
+        <Navbar />
+      </div>
       <div className="flex flex-col mt-16 justify-center items-center">
         <p className="text-5xl my-3 font-bold">Author Name</p>
         <p className="text-2xl font-light my-3">Author Bio</p>
@@ -22,7 +25,6 @@ export const UserSkeleton = () => {
       </div>
       <div className="flex mt-[3.5rem] justify-center">
         <div className="w-full mx-4 md:m-0 md:w-3/4 py-2 pl-7">
-          <BlogSkeleton />
           <BlogSkeleton />
           <BlogSkeleton />
           <BlogSkeleton />

@@ -9,9 +9,11 @@ export const User = () => {
   const { loading, author } = useAuthor({
     id: id || "",
   });
+
   useEffect(() => {
     document.title = "Blogify | User Preview";
   }, []);
+
   if (loading) {
     return <UserSkeleton />;
   }
@@ -23,7 +25,6 @@ export const User = () => {
         name={author?.name}
         bio={author?.bio}
         topics={author?.topics}
-        blogs={author?.blogs}
         followers={author?.followers}
         following={author?.following}
       ></UserDetails>

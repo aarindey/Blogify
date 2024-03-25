@@ -5,7 +5,8 @@ import { Spinner } from "./Spinner";
 export const TopicSkeleton = () => {
   return (
     <div className="flex flex-col">
-      <Navbar />
+        <Navbar />
+
       <div className="flex flex-col mt-16 justify-center items-center">
         <p className="text-5xl my-3 font-bold">Topic Name</p>
         <div className="flex gap-2 text-slate-500">

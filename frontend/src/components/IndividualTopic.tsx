@@ -15,6 +15,7 @@ export const IndividualTopic = ({
     id: number;
     title: string;
     content: string;
+    date: string;
     author: { id?: number; name: string };
   }[];
   users: { id: number; name: string; bio: string }[];
@@ -41,7 +42,7 @@ export const IndividualTopic = ({
                 authorName={blog.author.name}
                 title={blog.title}
                 content={blog.content}
-                publishedDate="21st Jan 2023"
+                publishedDate={blog.date.split("T")[0]}
               />
             ))
           ) : (

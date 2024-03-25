@@ -94,6 +94,60 @@ authorRouter.get("/elite", async (c) => {
   }
 });
 
+// Endpoint to get blogs by author with pagination
+authorRouter.get("/:id/blogs", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const authorId = Number(c.req.param("id"));
+    const page = Number(c.req.query("page")) || 1;
+    const limit = Number(c.req.query("limit")) || 5; // Default page size is 10
+
+    const skip = (page - 1) * limit;
+
+    const blogs = await prisma.blog.findMany({
+      where: {
+        authorId: authorId,
+      },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        date: true,
+      },
+      orderBy: {
+        date: "desc", // Order blogs by date, you can change this as per your requirement
+      },
+      skip: skip,
+      take: limit,
+    });
+
+    const totalBlogsCount = await prisma.blog.count({
+      where: {
+        authorId: authorId,
+      },
+    });
+
+    return c.json({
+      success: true,
+      blogs: blogs,
+      blogsCount: totalBlogsCount,
+      totalPages: Math.ceil(totalBlogsCount / limit),
+    });
+  } catch (error) {
+    c.status(500);
+    return c.json({
+      success: false,
+      error: error,
+      message: "Error trying to get blogs by author!",
+    });
+  } finally {
+    await prisma.$disconnect();
+  }
+});
+
 authorRouter.get("/:id", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
@@ -101,6 +155,7 @@ authorRouter.get("/:id", async (c) => {
 
   try {
     const authorId = Number(c.req.param("id"));
+
     const author = await prisma.user.findFirst({
       where: {
         id: authorId,
@@ -109,13 +164,6 @@ authorRouter.get("/:id", async (c) => {
         id: true,
         name: true,
         bio: true,
-        blogs: {
-          select: {
-            id: true,
-            title: true,
-            content: true,
-          },
-        },
         topics: {
           select: { id: true, name: true },
         },
@@ -149,8 +197,10 @@ authorRouter.get("/:id", async (c) => {
     return c.json({
       success: false,
       error: error,
-      message: "Error trying to get a Author!",
+      message: "Error trying to get an author!",
     });
+  } finally {
+    await prisma.$disconnect();
   }
 });
 

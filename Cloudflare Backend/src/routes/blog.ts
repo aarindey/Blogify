@@ -263,7 +263,128 @@ blogRouter.delete("/delete/:id", async (c) => {
   }
 });
 
-// Todo: Pagination
+blogRouter.get("/fetch", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const userId = Number(c.get("userId"));
+    const page = Number(c.req.query("page"));
+    const limit = Number(c.req.query("limit"));
+    const offset = (page - 1) * limit;
+    const type = c.req.query("type");
+
+    let blogs;
+    let totalBlogsCount;
+
+    switch (type) {
+      case "followedUsers":
+        const followedUsers = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { following: { select: { id: true } } },
+        });
+        const followedUserIds = followedUsers?.following.map((user) => user.id);
+        if (!followedUserIds || followedUserIds.length === 0) {
+          return c.json({ data: [], totalPages: 0 });
+        }
+        blogs = await prisma.blog.findMany({
+          where: {
+            authorId: { in: followedUserIds },
+          },
+          select: {
+            content: true,
+            title: true,
+            id: true,
+            date: true,
+            author: {
+              select: {
+                name: true,
+              },
+            },
+          },
+          skip: offset,
+          take: limit,
+        });
+        totalBlogsCount = await prisma.blog.count({
+          where: {
+            authorId: { in: followedUserIds },
+          },
+        });
+        break;
+      case "followedTopics":
+        const followedTopics = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { topics: { select: { id: true } } },
+        });
+        const followedTopicIds = followedTopics?.topics.map((topic) => topic.id);
+        if (!followedTopicIds || followedTopicIds.length === 0) {
+          return c.json({ data: [], totalPages: 0 });
+        }
+        blogs = await prisma.blog.findMany({
+          where: {
+            OR: followedTopicIds?.map((topicId: number) => ({
+              topics: {
+                some: { id: topicId },
+              },
+            })),
+          },
+          select: {
+            content: true,
+            title: true,
+            id: true,
+            date: true,
+            author: {
+              select: {
+                name: true,
+              },
+            },
+          },
+          skip: offset,
+          take: limit,
+        });
+        totalBlogsCount = await prisma.blog.count({
+          where: {
+            OR: followedTopicIds.map((topicId: number) => ({
+              topics: {
+                some: { id: topicId },
+              },
+            })),
+          },
+        });
+        break;
+      default:
+        blogs = await prisma.blog.findMany({
+          select: {
+            content: true,
+            title: true,
+            id: true,
+            date: true,
+            author: {
+              select: {
+                name: true,
+              },
+            },
+          },
+          skip: offset,
+          take: limit,
+        });
+        totalBlogsCount = await prisma.blog.count({});
+        break;
+    }
+
+    return c.json({
+      data: blogs,
+      totalPages: Math.ceil(totalBlogsCount / limit),
+    });
+  } catch (error) {
+    return c.json({ error: error, message: "Error trying to fetch blogs!" });
+  } finally {
+    await prisma.$disconnect();
+  }
+});
+
+// Blogs fetch with pagination
 blogRouter.get("/bulk", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
@@ -289,9 +410,152 @@ blogRouter.get("/bulk", async (c) => {
       take: limit,
     });
 
-    return c.json({ data: blogs });
+    const totalBlogsCount = await prisma.blog.count({});
+
+    return c.json({
+      data: blogs,
+      totalPages: Math.ceil(totalBlogsCount / limit),
+    });
   } catch (error) {
     return c.json({ error: error, message: "Error trying to get all blogs!" });
+  }
+});
+
+// Blogs from followed users
+blogRouter.get("/followedUsers", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const userId = Number(c.get("userId"));
+    const page = Number(c.req.query("page"));
+    const limit = Number(c.req.query("limit"));
+    const offset = (page - 1) * limit;
+
+    // Retrieve the IDs of users followed by the current user
+    const followedUsers = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { following: { select: { id: true } } },
+    });
+
+    const followedUserIds = followedUsers?.following.map((user) => user.id);
+
+    if (!followedUserIds || followedUserIds.length === 0) {
+      // If the current user is not following any users, return an empty array
+      return c.json({ data: [], totalPages: 0 });
+    }
+
+    // Retrieve blogs authored by followed users
+    const blogs = await prisma.blog.findMany({
+      where: {
+        authorId: { in: followedUserIds },
+      },
+      select: {
+        content: true,
+        title: true,
+        id: true,
+        date: true,
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      skip: offset,
+      take: limit,
+    });
+
+    const totalBlogsCount = await prisma.blog.count({
+      where: {
+        authorId: { in: followedUserIds },
+      },
+    });
+
+    return c.json({
+      data: blogs,
+      totalPages: Math.ceil(totalBlogsCount / limit),
+    });
+  } catch (error) {
+    return c.json({
+      error: error,
+      message: "Error trying to get blogs from followed users!",
+    });
+  } finally {
+    await prisma.$disconnect();
+  }
+});
+
+// Blogs from followed topics
+blogRouter.get("/followedTopics", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const userId = Number(c.get("userId"));
+    const page = Number(c.req.query("page"));
+    const limit = Number(c.req.query("limit"));
+    const offset = (page - 1) * limit;
+
+    // Retrieve the IDs of users followed by the current user
+    const followedTopics = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { topics: { select: { id: true } } },
+    });
+
+    const followedTopicIds = followedTopics?.topics.map((topic) => topic.id);
+
+    if (!followedTopicIds || followedTopicIds.length === 0) {
+      // If the current user is not following any users, return an empty array
+      return c.json({ data: [], totalPages: 0 });
+    }
+
+    // Retrieve blogs authored by followed users
+    const blogs = await prisma.blog.findMany({
+      where: {
+        OR: followedTopicIds?.map((topicId: number) => ({
+          topics: {
+            some: { id: topicId },
+          },
+        })),
+      },
+      select: {
+        content: true,
+        title: true,
+        id: true,
+        date: true,
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      skip: offset,
+      take: limit,
+    });
+
+    const totalBlogsCount = await prisma.blog.count({
+      where: {
+        OR: followedTopicIds.map((topicId: number) => ({
+          topics: {
+            some: { id: topicId },
+          },
+        })),
+      },
+    });
+
+    return c.json({
+      data: blogs,
+      totalPages: Math.ceil(totalBlogsCount / limit),
+    });
+  } catch (error) {
+    return c.json({
+      error: error,
+      message: "Error trying to get blogs from followed users!",
+    });
+  } finally {
+    await prisma.$disconnect();
   }
 });
 

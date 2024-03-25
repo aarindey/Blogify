@@ -19,16 +19,17 @@ interface Blog {
 export const Blogs = () => {
   // State variable to hold the current page
   const [currentPage, setCurrentPage] = useState(1);
+  const [fetchType, setFetchType] = useState("all");
 
   // Event handler to update the current page when the slider is moved
   const handleClick = (page: number) => {
     setCurrentPage(page);
-    setLoading(true);
   };
 
-  const { loading, setLoading, blogs } = useBlogs({
+  const { loading, blogs, pages } = useBlogs({
     page: currentPage,
     limit: 5,
+    fetchType,
   });
 
   useEffect(() => {
@@ -39,7 +40,46 @@ export const Blogs = () => {
     return (
       <div className="flex flex-col">
         <Navbar />
-        <div className="flex mt-[4.5rem] justify-center">
+        <div className="flex items-center justify-start space-x-4 mt-20 pl-7">
+          <button
+            className={`px-4 py-2 rounded-full border border-transparent transition-colors duration-300 focus:outline-none focus:border-blue-500 hover:bg-orange-500 hover:text-white ${
+              fetchType === "followedUsers"
+                ? "bg-blue-500 text-white"
+                : "bg-orange-200"
+            }`}
+            onClick={() => {
+              setFetchType("followedUsers");
+              setCurrentPage(1);
+            }}
+          >
+            Blogs from Followed Users
+          </button>
+          <button
+            className={`px-4 py-2 rounded-full border border-transparent transition-colors duration-300 focus:outline-none focus:border-blue-500 hover:bg-orange-500 hover:text-white ${
+              fetchType === "followedTopics"
+                ? "bg-blue-500 text-white"
+                : "bg-orange-200"
+            }`}
+            onClick={() => {
+              setFetchType("followedTopics");
+              setCurrentPage(1);
+            }}
+          >
+            Blogs on Followed Topics
+          </button>
+          <button
+            className={`px-4 py-2  rounded-full border border-transparent transition-colors duration-300 focus:outline-none focus:border-blue-500 hover:bg-orange-500 hover:text-white ${
+              fetchType === "all" ? "bg-blue-500 text-white" : "bg-orange-200"
+            }`}
+            onClick={() => {
+              setFetchType("all");
+              setCurrentPage(1);
+            }}
+          >
+            All Blogs
+          </button>
+        </div>
+        <div className="flex mt-4 justify-center">
           <div className="w-full mx-4 md:m-0 md:w-3/4 py-2 pl-7">
             <BlogSkeleton />
             <BlogSkeleton />
@@ -58,7 +98,48 @@ export const Blogs = () => {
   return (
     <div className="flex flex-col">
       <Navbar />
-      <div className="flex mt-[4.5rem] justify-center">
+
+      <div className="flex items-center justify-start space-x-4 mt-20 pl-7">
+        <button
+          className={`px-4 py-2 rounded-full border border-transparent transition-colors duration-300 focus:outline-none focus:border-blue-500 hover:bg-orange-500 hover:text-white ${
+            fetchType === "followedUsers"
+              ? "bg-blue-500 text-white"
+              : "bg-orange-200"
+          }`}
+          onClick={() => {
+            setFetchType("followedUsers");
+            setCurrentPage(1);
+          }}
+        >
+          Blogs from Followed Users
+        </button>
+        <button
+          className={`px-4 py-2 rounded-full border border-transparent transition-colors duration-300 focus:outline-none focus:border-blue-500 hover:bg-orange-500 hover:text-white ${
+            fetchType === "followedTopics"
+              ? "bg-blue-500 text-white"
+              : "bg-orange-200"
+          }`}
+          onClick={() => {
+            setFetchType("followedTopics");
+            setCurrentPage(1);
+          }}
+        >
+          Blogs on Followed Topics
+        </button>
+        <button
+          className={`px-4 py-2 rounded-full border border-transparent transition-colors duration-300 focus:outline-none focus:border-blue-500 hover:bg-orange-500 hover:text-white ${
+            fetchType === "all" ? "bg-blue-500 text-white" : "bg-orange-200"
+          }`}
+          onClick={() => {
+            setFetchType("all");
+            setCurrentPage(1);
+          }}
+        >
+          All Blogs
+        </button>
+      </div>
+
+      <div className="flex mt-4 justify-center">
         <div className="w-full mx-4 md:m-0 md:w-3/4">
           {blogs.length > 0 ? (
             blogs.map((blog: Blog) => {
@@ -74,13 +155,13 @@ export const Blogs = () => {
               );
             })
           ) : (
-            <div className="flex justify-center h-screen mt-10 font-extralight text-xl">
+            <div className="flex justify-center items-center h-2/3 mt-10 font-extralight text-xl">
               {" "}
               <p>No Blogs Present</p>
             </div>
           )}
           <div className="flex justify-center mt-8">
-            {[...Array(10)].map((_, index) => (
+            {[...Array(pages)].map((_, index) => (
               <div
                 key={index}
                 className={`w-3 h-3 rounded-full mx-1 cursor-pointer 
