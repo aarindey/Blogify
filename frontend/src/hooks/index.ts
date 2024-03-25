@@ -6,6 +6,7 @@ interface Blog {
   id: number;
   title: string;
   content: string;
+  date: string;
   author: {
     id?: number;
     name: string;
@@ -17,13 +18,19 @@ interface Blog {
   }[];
 }
 
-export const useBlogs = () => {
+export const useBlogs = ({
+  page = 1,
+  limit = 5,
+}: {
+  page: number;
+  limit: number;
+}) => {
   const [loading, setLoading] = useState(true);
   const [blogs, setBlogs] = useState<Blog[]>([]);
 
   useEffect(() => {
     axios
-      .get(`${BACKEND_URL}/api/v1/blog/bulk`, {
+      .get(`${BACKEND_URL}/api/v1/blog/bulk?page=${page}&limit=${limit}`, {
         headers: {
           Authorization: localStorage.getItem("token"),
         },
@@ -32,9 +39,9 @@ export const useBlogs = () => {
         setBlogs(response.data.data);
         setLoading(false);
       });
-  }, []);
+  }, [limit, page]);
 
-  return { loading, blogs };
+  return { loading, setLoading, blogs };
 };
 
 export const useBlog = ({ id }: { id: string }) => {

@@ -11,6 +11,7 @@ interface Blog {
   id: number;
   title: string;
   content: string;
+  date: string;
   author: {
     id?: number;
     bio: string;
@@ -191,7 +192,9 @@ export const IndividualBlog = ({
             Delete
           </button>
         </div>
-        <div className="text-slate-500 pt-4">Posted on 2nd Dec, 2020</div>
+        <div className="text-slate-500 pt-4">
+          Posted on {blog.date.split("T")[0]}
+        </div>
         <div className="pt-4">{blog.content}</div>
         {imageUrl != "" && imageUrl != null && (
           <img
