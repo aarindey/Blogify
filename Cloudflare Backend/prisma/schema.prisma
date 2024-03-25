@@ -14,26 +14,28 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String?
-  username  String  @unique
+  username  String    @unique
   password  String
   bio       String?
   blogs     Blog[]
   topics    Topic[]
-  following User[]  @relation("Follows")
-  followers User[]  @relation("Follows")
+  following User[]    @relation("Follows")
+  followers User[]    @relation("Follows")
+  Comment   Comment[]
 }
 
 model Blog {
-  id        Int     @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   authorId  Int
   content   String
   title     String
   imageName String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
+  published Boolean   @default(false)
+  author    User      @relation(fields: [authorId], references: [id])
   topics    Topic[]
+  Comment   Comment[]
 }
 
 model Topic {
@@ -42,3 +44,16 @@ model Topic {
   users User[]
   blogs Blog[]
 }
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
+  blogId    Int
+  blog      Blog     @relation(fields: [blogId], references: [id])
+  parentId  Int?
+  parent    Comment? @relation("ParentComment", fields: [parentId], references: [id])
+  replies   Comment[] @relation("ParentComment")
+}
+

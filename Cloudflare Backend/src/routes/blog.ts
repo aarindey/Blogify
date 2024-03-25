@@ -316,3 +316,152 @@ blogRouter.get("/:id", async (c) => {
 });
 
 export default blogRouter;
+
+// Comments endpoint
+blogRouter.post("/:id/comments", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+  try {
+    const id = Number(c.req.param("id"));
+    const body = await c.req.json();
+    const { content, parentId } = body;
+    const authorId = Number(c.get("userId"));
+
+    // Check if the blog exists
+    const existingBlog = await prisma.blog.findUnique({
+      where: { id: id },
+    });
+
+    if (!existingBlog) {
+      c.status(404);
+      return c.json({ success: false, error: "Blog not found" });
+    }
+
+    const data: any = {
+      content: content,
+      author: {
+        connect: { id: authorId }, // Connects the comment to the author
+      },
+      blog: {
+        connect: { id: id }, // Connects the comment to the blog
+      },
+    };
+
+    if (parentId !== null && parentId !== undefined) {
+      data.parent = {
+        connect: { id: parentId },
+      };
+    }
+
+    const comment = await prisma.comment.create({
+      data: data,
+      include: {
+        author: true, // Include the author object
+      },
+    });
+
+    c.status(201);
+    return c.json({ success: true, data: comment });
+  } catch (error) {
+    console.error("Error creating comment:", error);
+    c.status(500);
+    return c.json({ success: false, error: "Internal server error" });
+  }
+});
+
+blogRouter.get("/:id/comments", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+  const blogId = Number(c.req.param("id"));
+  try {
+    const comments = await prisma.comment.findMany({
+      select: {
+        id: true,
+        content: true,
+        author: true,
+        parentId: true,
+        parent: true,
+        replies: true,
+      },
+      where: {
+        blogId: blogId,
+      },
+    });
+
+    return c.json({ data: comments });
+  } catch (error) {
+    return c.json({ error: error, message: "Error trying to get comments!" });
+  }
+});
+
+//endpoints consider that only base-level comments exist
+blogRouter.delete("/:blogId/comments/:commentId", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  const commentId = Number(c.req.param("commentId"));
+
+  try {
+    // Check if the comment exists
+    const existingComment = await prisma.comment.findUnique({
+      where: { id: commentId },
+    });
+
+    if (!existingComment) {
+      c.status(404);
+      return c.json({ success: false, error: "Comment not found" });
+    }
+
+    // Delete the comment
+    await prisma.comment.delete({
+      where: { id: commentId },
+    });
+
+    c.status(200);
+    return c.json({ success: true, message: "Comment deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    c.status(500);
+    return c.json({ success: false, error: "Internal server error" });
+  }
+});
+
+blogRouter.put("/:blogId/comments/:commentId", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  const commentId = Number(c.req.param("commentId"));
+  const body = await c.req.json();
+  const { content } = body;
+
+  try {
+    // Check if the comment exists
+    const existingComment = await prisma.comment.findUnique({
+      where: { id: commentId },
+      include: { author: true }, // Include author information
+    });
+
+    if (!existingComment) {
+      c.status(404);
+      return c.json({ success: false, error: "Comment not found" });
+    }
+
+    // Update the comment
+    const updatedComment = await prisma.comment.update({
+      where: { id: commentId },
+      data: { content: content },
+      include: { author: true }, // Include author information
+    });
+
+    c.status(200);
+    return c.json({ success: true, data: updatedComment });
+  } catch (error) {
+    console.error("Error updating comment:", error);
+    c.status(500);
+    return c.json({ success: false, error: "Internal server error" });
+  }
+});
