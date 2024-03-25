@@ -95,13 +95,19 @@ blogRouter.put("/update", async (c) => {
     const blogId = Number(body.id);
 
     // Update blog title and content
+    const updateData: { title: string; content: string; imageName?: string } = {
+      title: body.title,
+      content: body.content,
+    };
+
+    if (body.imageName !== "" && body.imageName !== null) {
+      updateData.imageName = body.imageName;
+    }
+
+    // Update blog title and content
     const updatedBlog = await prisma.blog.update({
       where: { id: blogId },
-      data: {
-        title: body.title,
-        content: body.content,
-        imageName: body.imageName,
-      },
+      data: updateData,
       include: {
         topics: true, // Include associated topics
       },
