@@ -60,12 +60,15 @@ Blogify is a robust blog application featuring secure user authentication, user 
 ## Contributors:
 aarindey
 
-![SignIn](https://github.com/aarindey/Storify/assets/77115128/345aa0a5-3c72-4155-9fe4-73641249cefe)
-![SignUp](https://github.com/aarindey/Storify/assets/77115128/4aefa3be-4393-46f2-8836-9d185376eb9e)
+![img_integration](https://github.com/aarindey/Blogify/assets/77115128/1afef786-1bf7-44ff-ab4d-3b8a0916cd32)
+![feed](https://github.com/aarindey/Blogify/assets/77115128/4bd8c893-e0c2-44f6-9bae-56a161a491b8)
+![Blog](https://github.com/aarindey/Storify/assets/77115128/550004fd-fd06-4570-bff1-8dc8f798ba04)
 ![Author](https://github.com/aarindey/Storify/assets/77115128/78b4d14a-dfb9-463d-b50b-271b018e4cf0)
 ![Topic](https://github.com/aarindey/Storify/assets/77115128/f78623e8-a5ab-4c5d-980c-e313c93ec685)
+![SignIn](https://github.com/aarindey/Storify/assets/77115128/345aa0a5-3c72-4155-9fe4-73641249cefe)
+![SignUp](https://github.com/aarindey/Storify/assets/77115128/4aefa3be-4393-46f2-8836-9d185376eb9e)
 ![CreateBlog](https://github.com/aarindey/Storify/assets/77115128/0685d3ba-c74d-4ae1-b0f3-ca2957d8b941)
-![img_integration](https://github.com/aarindey/Blogify/assets/77115128/1afef786-1bf7-44ff-ab4d-3b8a0916cd32)
-![Blog](https://github.com/aarindey/Storify/assets/77115128/550004fd-fd06-4570-bff1-8dc8f798ba04)
-![Feed](https://github.com/aarindey/Storify/assets/77115128/a238b467-6c50-4bde-87d7-e6f406915525)
+
+
+
 
