@@ -54,6 +54,14 @@ export const Navbar = ({
 
       <div className="flex">
         {" "}
+        <Link to="/chat">
+          <button
+            type="button"
+            className="mt-1 text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-400 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2"
+          >
+            Chat
+          </button>
+        </Link>
         <Link to="/blogs">
           <button
             type="button"

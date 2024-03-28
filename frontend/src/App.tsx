@@ -7,6 +7,7 @@ import { CreateBlog } from "./pages/CreateBlog";
 import { Topic } from "./pages/Topic";
 import { User } from "./pages/User";
 import { UpdateBlog } from "./pages/UpdateBlog";
+import { Chat } from "./pages/Chat";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/blog/:id" element={<Blog />}></Route>
           <Route path="/topic/:id" element={<Topic />}></Route>
           <Route path="/user/:id" element={<User />}></Route>
+          <Route path="/chat" element={<Chat />}></Route>
           <Route path="/blogs" element={<Blogs />}></Route>
           <Route path="/create" element={<CreateBlog />}></Route>
           <Route path="/update/:id" element={<UpdateBlog />}></Route>
