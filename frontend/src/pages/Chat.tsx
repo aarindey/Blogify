@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Navbar } from "../components/Navbar";
-import { BACKEND_URL } from "../config";
 import axios from "axios";
 import { ChatHeader } from "../components/ChatHeader";
 import SearchBox from "../components/SearchBox";
@@ -8,34 +7,62 @@ import { Avatar } from "../components/BlogCard";
 import { TextBox } from "../components/TextBox";
 import ChatInputBox from "../components/ChatInputBox";
 
-interface User {
-  id: number;
+interface Participant {
+  _id: string;
+  username: string;
   name: string;
 }
 
+interface LastMessage {
+  text: string;
+  sender: string;
+}
+
+interface Conversation {
+  lastMessage: LastMessage;
+  _id: string;
+  participants: Participant[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
 export const Chat = () => {
+  const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User>();
-  useEffect(() => {
-    try {
-      axios
-        .get(`${BACKEND_URL}/api/v1/author/me`, {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        })
-        .then((response) => {
-          setUser(response.data.user);
-          setLoading(false);
-        });
-    } catch (error) {
-      console.log("some error occured");
-    }
-  }, []);
+  const [username, setUsername] = useState("Pikachu5@gmail.com");
+  const [password, setPassword] = useState("pikachu5");
   useEffect(() => {
     document.title = "Blogify | Chat";
   });
 
+  useEffect(() => {
+    const getConversations = async () => {
+      try {
+        await axios.post(
+          "http://127.0.0.1:3003/api/v1/user/signin",
+          {
+            username: username,
+            password: password,
+          },
+          { withCredentials: true }
+        );
+        const res = await axios.get(
+          "http://127.0.0.1:3003/api/v1/message/conversations",
+          { withCredentials: true }
+        );
+        setConversations(res.data.conversations);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getConversations();
+  }, []);
+  if (loading) {
+    return <div>Loading..</div>;
+  }
   return (
     <div className="flex flex-col">
       <Navbar />
@@ -47,81 +74,15 @@ export const Chat = () => {
             </div>
             <SearchBox />
             <div className="h-[32rem] overflow-scroll">
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey this is Aarin"
-              />
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey this is Aarin I want to make sure if you have received the mail"
-              />
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey This is the last message to this conversation."
-              />
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey This is the last message to this conversation."
-              />
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey This is the last message to this conversation."
-              />
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey this is Aarin"
-              />
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey this is Aarin I want to make sure if you have received the mail"
-              />
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey This is the last message to this conversation."
-              />
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey This is the last message to this conversation."
-              />
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey This is the last message to this conversation."
-              />
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey this is Aarin"
-              />
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey this is Aarin I want to make sure if you have received the mail"
-              />
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey This is the last message to this conversation."
-              />
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey This is the last message to this conversation."
-              />
-              <ChatHeader
-                id={1}
-                name="Arindam Dey"
-                lastMessage="Hey This is the last message to this conversation."
-              />
+              {conversations.map((conversation) => {
+                return (
+                  <ChatHeader
+                    id={conversation._id}
+                    name={conversation.participants[0].name}
+                    lastMessage={conversation.lastMessage.text}
+                  />
+                );
+              })}
             </div>
           </div>
           <div className="w-8/12 p-2">
@@ -129,7 +90,7 @@ export const Chat = () => {
               <div className="mt-20 px-4 py-2 rounded-full border border-transparent transition-colors duration-300 focus:outline-none focus:border-blue-500">
                 Message Box
               </div>
-              <div className="bg-slate-100 rounded-lg">
+              <div className="bg-gray-200 rounded-lg">
                 <div className="p-3 flex">
                   <Avatar padding="p-4" />
                   <div className="flex items-center px-3">Name here</div>

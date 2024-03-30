@@ -1,16 +1,9 @@
 import jwt from "jsonwebtoken";
 
 const authMiddleware = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    res.status(403).json({
-      message: "JWT absent",
-    });
-  }
-
-  const token = authHeader.split(" ")[1];
+  const token = req.cookies.token;
   if (!token) {
-    return res.status(403).json({ message: "Token absent" });
+    return res.status(403).json({ success: false, message: "Token absent" });
   }
 
   try {
@@ -19,7 +12,7 @@ const authMiddleware = (req, res, next) => {
 
     next();
   } catch (err) {
-    res.status(403).json({ error: err, message: "JWT error" });
+    res.status(403).json({ success: false, error: err, message: "JWT error" });
   }
 };
 

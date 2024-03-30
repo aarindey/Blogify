@@ -4,15 +4,22 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import connect from "./services/db.js";
 import rootRouter from "./routes/index.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3003;
 
-app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:5173",
+  })
+);
 
 app.use("/api/v1", rootRouter);
 

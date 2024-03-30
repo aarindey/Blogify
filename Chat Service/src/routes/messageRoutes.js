@@ -1,13 +1,15 @@
 import { Router } from "express";
 import authMiddleware from "../middlewares/authMiddleware.js";
-import sendMessage from "../controllers/messageController.js";
+import {
+  sendMessage,
+  getMessages,
+  getConversations,
+} from "../controllers/messageController.js";
 
 const router = Router();
 
-router.get("/", (req, res) => {
-  return res.json({ message: "Get request Success" });
-});
-
-router.post("/", authMiddleware, sendMessage);
+router.post("/send", authMiddleware, sendMessage);
+router.get("/conversations", authMiddleware, getConversations);
+router.get("/:otherUserId", authMiddleware, getMessages);
 
 export default router;

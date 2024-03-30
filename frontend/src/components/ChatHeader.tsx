@@ -2,7 +2,7 @@ import { Avatar } from "./BlogCard";
 
 export const ChatHeader = ({
   id,
-  name,
+  name = "Anonymous",
   lastMessage,
 }: {
   id: number;
@@ -10,7 +10,7 @@ export const ChatHeader = ({
   lastMessage: string;
 }) => {
   return (
-    <div className="flex justify-center items-start gap-2.5 bg-slate-100 rounded-lg px-2 py-2 my-1 mr-1">
+    <div className="flex justify-center items-start gap-2.5 bg-slate-200 rounded-lg px-2 py-2 my-1 mr-1">
       <Avatar authorName={name} padding="p-4" />
       <div className="flex flex-col w-full leading-1.5">
         <div className="flex items-center space-x-2 rtl:space-x-reverse">
