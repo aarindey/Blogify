@@ -67,7 +67,8 @@ aarindey
 ![Topic](https://github.com/aarindey/Storify/assets/77115128/f78623e8-a5ab-4c5d-980c-e313c93ec685)
 ![SignIn](https://github.com/aarindey/Storify/assets/77115128/345aa0a5-3c72-4155-9fe4-73641249cefe)
 ![SignUp](https://github.com/aarindey/Storify/assets/77115128/4aefa3be-4393-46f2-8836-9d185376eb9e)
-![CreateBlog](https://github.com/aarindey/Storify/assets/77115128/0685d3ba-c74d-4ae1-b0f3-ca2957d8b941)
+![publish](https://github.com/aarindey/Blogify/assets/77115128/e1f4a919-10f4-4c40-a8fc-18bc98286898)
+
 
 
 
