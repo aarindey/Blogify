@@ -43,7 +43,8 @@ export const signUp = async (req, res) => {
     const id = user._id;
     const token = jwt.sign({ userid: id }, process.env.JWT_SECRET);
     res.cookie("token", token, {
-      domain: "http://localhost:5173",
+      domain: "localhost",
+      secure: false,
     });
     res.status(200).json({
       message: "Sign up successful",
@@ -73,7 +74,8 @@ export const signIn = async (req, res) => {
       const userid = user._id;
       const token = jwt.sign({ userid: userid }, process.env.JWT_SECRET);
       res.cookie("token", token, {
-        domain: "http://localhost:5173",
+        domain: "localhost",
+        secure: false,
       });
       return res
         .status(200)

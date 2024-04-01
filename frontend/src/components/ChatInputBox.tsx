@@ -1,15 +1,24 @@
-import React from "react";
+import { ChangeEvent, MouseEventHandler } from "react";
 
-const ChatInputBox = () => {
+interface ChatInputBoxProps {
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+}
+
+const ChatInputBox = ({ onChange, onClick }: ChatInputBoxProps) => {
   return (
     <div className="flex">
       <div className="w-full m-2 bg-white border border-gray-300 rounded-lg  relative">
         <input
+          onChange={onChange}
           type="text"
           className="w-full bg-white border-none rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Type your message..."
         />
-        <button className="absolute right-0 bottom-0 bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center transform translate-x-1/2 translate-y-1/2">
+        <button
+          onClick={onClick}
+          className="absolute right-0 bottom-0 bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center transform translate-x-1/2 translate-y-1/2"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"

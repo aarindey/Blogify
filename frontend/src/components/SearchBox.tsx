@@ -1,10 +1,10 @@
 const SearchBox = () => {
   return (
-    <div className="flex items-center justify-start my-3">
+    <div className="flex items-center max-w-full justify-start my-3">
       <div className="relative">
         <input
           type="text"
-          className="border border-gray-300 rounded-md py-2 px-4 pl-10 focus:outline-none focus:border-blue-500"
+          className="border w-[10rem] md:w-[12rem] lg:w-[15rem] border-gray-300 rounded-md py-2 px-4 pl-10 focus:outline-none focus:border-blue-500"
           placeholder="Search Box"
         />
 

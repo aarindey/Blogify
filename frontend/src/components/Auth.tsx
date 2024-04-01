@@ -22,6 +22,11 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       );
       const jwt = response.data.token;
       localStorage.setItem("token", jwt);
+      await axios.post(
+        `http://localhost:3003/api/v1/user/${isSignup ? "signup" : "signin"}`,
+        postInputs,
+        { withCredentials: true }
+      );
       navigate("/blogs");
     } catch (error) {
       alert("Sign up request failed");

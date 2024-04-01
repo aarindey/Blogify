@@ -48,6 +48,7 @@ export async function getMessages(req, res) {
     });
     if (!conversation) {
       return res.status(404).json({
+        success: false,
         message: "No converstion between both participants",
       });
     }
@@ -55,13 +56,17 @@ export async function getMessages(req, res) {
     const messages = await Message.find({
       conversationId: conversationId,
     }).sort({ createdAt: 1 });
-    return res
-      .status(200)
-      .json({ message: "succesfully retrived messages", messages: messages });
+    return res.status(200).json({
+      success: true,
+      message: "succesfully retrived messages",
+      messages: messages,
+    });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "failed retriving messages", error: error });
+    return res.status(500).json({
+      success: false,
+      message: "failed retriving messages",
+      error: error,
+    });
   }
 }
 
@@ -70,10 +75,12 @@ export async function getConversations(req, res) {
   try {
     const conversations = await Conversation.find({
       participants: userId,
-    }).populate({
-      path: "participants",
-      select: "username name",
-    });
+    })
+      .populate({
+        path: "participants",
+        select: "username name",
+      })
+      .populate({ path: "lastMessage.sender", select: "name" });
 
     conversations.forEach((conversation) => {
       conversation.participants = conversation.participants.filter(
