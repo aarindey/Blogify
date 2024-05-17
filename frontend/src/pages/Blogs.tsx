@@ -5,6 +5,7 @@ import { BlogSkeleton } from "../components/BlogSkeleton";
 import { Navbar } from "../components/Navbar";
 import { useBlogs } from "../hooks";
 import { SideBar } from "../components/SideBar";
+import SearchBox from "../components/SearchBox";
 
 interface Blog {
   content: string;
@@ -98,7 +99,7 @@ export const Blogs = () => {
   return (
     <div className="flex flex-col">
       <Navbar />
-
+      <SearchBox></SearchBox>
       <div className="flex items-center justify-start space-x-4 mt-20 pl-7">
         <button
           className={`px-4 py-2 rounded-full border border-transparent transition-colors duration-300 focus:outline-none focus:border-blue-500 hover:bg-orange-500 hover:text-white ${
