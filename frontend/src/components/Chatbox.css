@@ -4,7 +4,6 @@
   right: 23px;
   z-index: 999;
   background-color: #fff;
-  border: 1px solid #ccc;
   border-radius: 26px;
   transition: transform 0.3s ease-in-out;
 }

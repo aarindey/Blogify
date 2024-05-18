@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./Chatbox.css"; // Import CSS for styling
 import CloseIcon from "../../public/x-solid.svg";
 import SearchIcon from "../../public/search-icon.svg";
+import { GEMINI_PRO_SERVICE } from "../config";
 
 interface QAItem {
   question: string;
@@ -31,7 +32,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ title, content }) => {
     try {
       const query =
         title + " " + content + ".In context of above information, " + question;
-      const response = await fetch("http://127.0.0.1:3010/query", {
+      const response = await fetch(`${GEMINI_PRO_SERVICE}/query`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
