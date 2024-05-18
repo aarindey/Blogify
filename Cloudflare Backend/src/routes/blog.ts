@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { verify } from "hono/jwt";
 import { blogPostBody, blogUpdateBody } from "@aarindey/medium-zod-common";
+import { SEARCH_SERVICE_URL } from "../../urlconfig";
 
 const blogRouter = new Hono<{
   Bindings: {
@@ -64,7 +65,7 @@ blogRouter.post("/", async (c) => {
     });
 
     // Use fetch instead of axios to send the post request
-    await fetch("http://localhost:3009/savepost", {
+    await fetch(`${SEARCH_SERVICE_URL}/savepost`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -100,7 +101,7 @@ blogRouter.get("/search", async (c) => {
     // Fetch the objectIDs from the search service
     console.log(query_string);
     const response = await fetch(
-      `http://localhost:3009/search?q=${query_string}`,
+      `${SEARCH_SERVICE_URL}/search?q=${query_string}`,
       {
         method: "GET",
         headers: {
