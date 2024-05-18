@@ -2,33 +2,43 @@ const express = require("express");
 const algoliasearch = require("algoliasearch");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
-const port = 3009 || process.env.PORT;
+const port = process.env.PORT || 3009;
 
-const client = algoliasearch("84T1JCTK99", "c5f8a909f0f537ef2d420c4ce7745ac0");
+const client = algoliasearch(
+  process.env.ALGOLIA_APP_ID,
+  process.env.ALGOLIA_API_KEY
+);
 const index = client.initIndex("blogs_store");
 
-// Use CORS and body-parser middleware
+// Middleware
 app.use(cors());
-app.use(bodyParser.json()); // For parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
+// Routes
 app.post("/savepost", (req, res) => {
-  //   console.log(req.body);
-  //   console.log(req);
-  // Create a new index and add a record
+  const { id, title, content } = req.body;
+
+  if (!id || !title || !content) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Missing required fields" });
+  }
+
   const record = {
-    objectID: req.body.id,
-    title: req.body.title,
-    content: req.body.content,
+    objectID: id,
+    title,
+    content,
   };
+
   index
     .saveObject(record)
-    .wait()
     .then((algoliaObj) => {
-      console.log("algoliaObj:", algoliaObj);
-      res.status(200).json({ success: true, message: "Blog saved in algolia" });
+      console.log("Algolia object saved:", algoliaObj);
+      res.status(200).json({ success: true, message: "Blog saved in Algolia" });
     })
     .catch((error) => {
       console.error("Error saving to Algolia:", error);
@@ -37,12 +47,18 @@ app.post("/savepost", (req, res) => {
 });
 
 app.get("/search", (req, res) => {
+  const query = req.query.q;
+
+  if (!query) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Query parameter 'q' is required" });
+  }
+
   index
-    .search(req.query.q)
+    .search(query)
     .then(({ hits }) => {
-      // Extract objectID from each hit and append to a new array
-      const objectIDs = hits.map((hit) => Number(hit.objectID));
-      // Return the array of objectIDs as the response
+      const objectIDs = hits.map((hit) => hit.objectID);
       res.status(200).json({ objectIDs });
     })
     .catch((error) => {
@@ -51,6 +67,7 @@ app.get("/search", (req, res) => {
     });
 });
 
+// Start server
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
