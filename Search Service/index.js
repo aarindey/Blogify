@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const app = express();
-const port = 3009;
+const port = 3009 || process.env.PORT;
 
 const client = algoliasearch("84T1JCTK99", "c5f8a909f0f537ef2d420c4ce7745ac0");
 const index = client.initIndex("blogs_store");
