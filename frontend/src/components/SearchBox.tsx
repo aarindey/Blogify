@@ -1,14 +1,22 @@
-const SearchBox = () => {
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+const SearchBox = ({ setQueryString, searchRequest, value }) => {
   return (
     <div className="flex items-center max-w-full justify-start mt-16 mx-8 -mb-16">
       <div className="relative">
         <input
           type="text"
+          value={value}
           className="border w-[10rem] md:w-[12rem] lg:w-[15rem] border-gray-300 rounded-md py-2 px-4 pl-10 focus:outline-none focus:border-blue-500"
           placeholder="Search Box"
+          onChange={(e) => {
+            setQueryString(e.target.value);
+          }}
         />
-
-        <button type="submit" className="font-bold py-2 px-4 border-slate-500">
+        <button
+          onClick={searchRequest}
+          className="font-bold py-2 px-4 border-slate-500"
+        >
           <svg
             className="w-5 h-5 text-gray-500"
             fill="none"

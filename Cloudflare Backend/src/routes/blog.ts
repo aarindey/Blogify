@@ -20,6 +20,7 @@ blogRouter.use("/*", async (c, next) => {
     if (user) {
       c.set("userId", user.id);
       await next();
+      ``;
     } else {
       c.status(403);
       return c.json({
@@ -61,18 +62,108 @@ blogRouter.post("/", async (c) => {
         },
       },
     });
+
+    // Use fetch instead of axios to send the post request
+    await fetch("http://localhost:3009/savepost", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(blog),
+    });
+
     return c.json({
       success: true,
       id: blog.id,
       message: "Blog successfully created!",
     });
   } catch (error) {
+    console.log(error);
     c.status(500);
     return c.json({
       success: false,
       error: error,
       message: "Blog creation failed",
     });
+  }
+});
+
+//Search from algolia db through serch service
+blogRouter.get("/search", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    // @ts-ignore
+    const query_string = c.req.query("q");
+    // Fetch the objectIDs from the search service
+    console.log(query_string);
+    const response = await fetch(
+      `http://localhost:3009/search?q=${query_string}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch search results");
+    }
+
+    const data = await response.json();
+    // @ts-ignore
+    const objectIDs = data.objectIDs;
+    console.log(objectIDs);
+    // if (!Array.isArray(objectIDs) || objectIDs.length === 0) {
+    //   throw new Error("No objectIDs found in the search results");
+    // }
+
+    // Query the blog table using the retrieved objectIDs
+    // const blogs = await prisma.blog.findMany({
+    //   where: {
+    //     id: {
+    //       in: objectIDs,
+    //     },
+    //   },
+    // });
+
+    const blogs = await prisma.blog.findMany({
+      where: {
+        id: {
+          in: objectIDs,
+        },
+      },
+      select: {
+        content: true,
+        title: true,
+        id: true,
+        date: true,
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    // Return the blog posts as the response
+    return c.json({
+      success: true,
+      blogs,
+    });
+  } catch (error) {
+    console.error(error);
+    c.status(500);
+    return c.json({
+      success: false,
+      message: "Blog search failed",
+      error: error,
+    });
+  } finally {
+    await prisma.$disconnect();
   }
 });
 
@@ -317,7 +408,9 @@ blogRouter.get("/fetch", async (c) => {
           where: { id: userId },
           select: { topics: { select: { id: true } } },
         });
-        const followedTopicIds = followedTopics?.topics.map((topic) => topic.id);
+        const followedTopicIds = followedTopics?.topics.map(
+          (topic) => topic.id
+        );
         if (!followedTopicIds || followedTopicIds.length === 0) {
           return c.json({ data: [], totalPages: 0 });
         }
