@@ -6,6 +6,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Spinner } from "./Spinner";
 import { PencilIcon, TrashIcon } from "@heroicons/react/16/solid";
+import ChatBox from "./ChatBox";
 
 interface Blog {
   id: number;
@@ -172,133 +173,137 @@ export const IndividualBlog = ({
   }
 
   return (
-    <div className="flex px-10 pt-12">
-      <div className="flex flex-col w-full lg:w-3/4 justify-center px-4 py-6 m-4">
-        <div className="text-5xl font-extrabold">{blog.title}</div>
-        <div className="flex pt-4">
-          <Link to={`/update/${blog.id}`} state={{ blog }}>
+    <>
+      <div className="flex px-10 pt-12">
+        <div className="flex flex-col w-full lg:w-3/4 justify-center px-4 py-6 m-4">
+          <div className="text-5xl font-extrabold">{blog.title}</div>
+          <div className="flex pt-4">
+            <Link to={`/update/${blog.id}`} state={{ blog }}>
+              <button
+                type="button"
+                className="mt-1 text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-4 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2"
+              >
+                Edit
+              </button>{" "}
+            </Link>
             <button
+              onClick={handleDelete}
               type="button"
-              className="mt-1 text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-4 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2"
+              className="mt-1 text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-4 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2"
             >
-              Edit
-            </button>{" "}
-          </Link>
-          <button
-            onClick={handleDelete}
-            type="button"
-            className="mt-1 text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-4 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2"
-          >
-            Delete
-          </button>
-        </div>
-        <div className="text-slate-500 pt-4">
-          Posted on {blog.date.split("T")[0]}
-        </div>
-        <div className="pt-4">{blog.content}</div>
-        {imageUrl != "" && imageUrl != null && (
-          <img
-            className="mt-5"
-            id={String(blog.id)}
-            src={imageUrl}
-            alt="Dynamic Image"
-          ></img>
-        )}
-      </div>
-      <div className="w-1/4 mt-10 hidden lg:block">
-        <div className="flex flex-col justify-center">
-          {" "}
-          <div className="text-slate-600 text-lg ml-6">Author</div>
-          <div>
-            <div>
-              <AuthorHeader
-                id={blog.author.id || 0}
-                name={blog.author.name}
-                bio={blog.author.bio}
-              ></AuthorHeader>
-            </div>
-          </div>
-          <div className="text-slate-600 text-lg ml-6">Topics</div>
-          <div className="flex flex-wrap px-3 py-3 bg-slate-100 rounded-lg">
-            {blog?.topics?.map((topic) => (
-              <Bubble name={topic.name || ""} id={topic.id || 1}></Bubble>
-            ))}
-            {blog?.topics?.length === 0 && (
-              <div className="p-4">No Topics to Display</div>
-            )}
-          </div>
-          <div>
-            <p className="font-bold mt-10 mb-2 text-xl">Comments</p>
-            <input
-              type="text"
-              id="company"
-              value={comment}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              placeholder="Write your comment here.."
-              onChange={(e) => {
-                setComment(e.target.value);
-              }}
-            />
-            <button
-              onClick={handleComment}
-              type="submit"
-              className="text-white mt-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-            >
-              Submit
+              Delete
             </button>
+          </div>
+          <div className="text-slate-500 pt-4">
+            Posted on {blog.date.split("T")[0]}
+          </div>
+          <div className="pt-4">{blog.content}</div>
+          {imageUrl != "" && imageUrl != null && (
+            <img
+              className="mt-5"
+              id={String(blog.id)}
+              src={imageUrl}
+              alt="Dynamic Image"
+            ></img>
+          )}
+        </div>
+        <div className="w-1/4 mt-10 hidden lg:block">
+          <div className="flex flex-col justify-center">
+            {" "}
+            <div className="text-slate-600 text-lg ml-6">Author</div>
             <div>
-              {commentLoading ? (
-                <div className="flex justify-center items-center h-32">
-                  <Spinner size={7} />
-                </div>
-              ) : (
-                <div className="mt-4">
-                  {comments.map((comment) => (
-                    <div key={comment.id} className="mt-4">
-                      <div>
-                        <span className="font-semibold">
-                          {comment.author.name}
-                        </span>{" "}
-                        - {comment.content}
-                        <button
-                          onClick={() =>
-                            handleDeleteComment({
-                              commentId: comment.id,
-                            })
-                          }
-                          className="bg-white hover:text-red-500 text-red-400 font-bold px-2 py-2 rounded inline-flex items-center"
-                        >
-                          <TrashIcon className="h-5 w-5" />
-                        </button>
-                        {commentEditMode && comment.id === commentUnderEdit ? (
-                          <button
-                            onClick={handleUpdateComment}
-                            className="bg-white hover:text-blue-700 text-blue-500 font-bold py-2 rounded inline-flex items-center"
-                          >
-                            <PencilIcon className="h-5 w-5" /> Save Edit
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() =>
-                              handleEditClick({
-                                commentId: comment.id,
-                                content: comment.content,
-                              })
-                            }
-                            className="bg-white hover:text-blue-700 text-blue-500 font-bold py-2 rounded inline-flex items-center"
-                          >
-                            <PencilIcon className="h-5 w-5" />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div>
+                <AuthorHeader
+                  id={blog.author.id || 0}
+                  name={blog.author.name}
+                  bio={blog.author.bio}
+                ></AuthorHeader>
+              </div>
+            </div>
+            <div className="text-slate-600 text-lg ml-6">Topics</div>
+            <div className="flex flex-wrap px-3 py-3 bg-slate-100 rounded-lg">
+              {blog?.topics?.map((topic) => (
+                <Bubble name={topic.name || ""} id={topic.id || 1}></Bubble>
+              ))}
+              {blog?.topics?.length === 0 && (
+                <div className="p-4">No Topics to Display</div>
               )}
             </div>
+            <div>
+              <p className="font-bold mt-10 mb-2 text-xl">Comments</p>
+              <input
+                type="text"
+                id="company"
+                value={comment}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Write your comment here.."
+                onChange={(e) => {
+                  setComment(e.target.value);
+                }}
+              />
+              <button
+                onClick={handleComment}
+                type="submit"
+                className="text-white mt-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+              >
+                Submit
+              </button>
+              <div>
+                {commentLoading ? (
+                  <div className="flex justify-center items-center h-32">
+                    <Spinner size={7} />
+                  </div>
+                ) : (
+                  <div className="mt-4">
+                    {comments.map((comment) => (
+                      <div key={comment.id} className="mt-4">
+                        <div>
+                          <span className="font-semibold">
+                            {comment.author.name}
+                          </span>{" "}
+                          - {comment.content}
+                          <button
+                            onClick={() =>
+                              handleDeleteComment({
+                                commentId: comment.id,
+                              })
+                            }
+                            className="bg-white hover:text-red-500 text-red-400 font-bold px-2 py-2 rounded inline-flex items-center"
+                          >
+                            <TrashIcon className="h-5 w-5" />
+                          </button>
+                          {commentEditMode &&
+                          comment.id === commentUnderEdit ? (
+                            <button
+                              onClick={handleUpdateComment}
+                              className="bg-white hover:text-blue-700 text-blue-500 font-bold py-2 rounded inline-flex items-center"
+                            >
+                              <PencilIcon className="h-5 w-5" /> Save Edit
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() =>
+                                handleEditClick({
+                                  commentId: comment.id,
+                                  content: comment.content,
+                                })
+                              }
+                              className="bg-white hover:text-blue-700 text-blue-500 font-bold py-2 rounded inline-flex items-center"
+                            >
+                              <PencilIcon className="h-5 w-5" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div>{" "}
+      <ChatBox title={blog.title} content={blog.content}></ChatBox>
+    </>
   );
 };

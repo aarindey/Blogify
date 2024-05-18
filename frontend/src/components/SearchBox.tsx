@@ -2,12 +2,12 @@
 // @ts-expect-error
 const SearchBox = ({ setQueryString, searchRequest, value }) => {
   return (
-    <div className="flex items-center max-w-full justify-start mt-16 mx-8 -mb-16">
-      <div className="relative">
+    <div className="flex items-center max-w-full justify-start mt-16 mx-8 -mb-16 w-full">
+      <div className="relative w-[24rem]">
         <input
           type="text"
           value={value}
-          className="border w-[10rem] md:w-[12rem] lg:w-[15rem] border-gray-300 rounded-md py-2 px-2 focus:outline-none focus:border-blue-500"
+          className="border border-gray-300 rounded-md py-2 px-2 focus:outline-none focus:border-blue-500"
           placeholder="Search Box"
           onChange={(e) => {
             setQueryString(e.target.value);
@@ -15,7 +15,7 @@ const SearchBox = ({ setQueryString, searchRequest, value }) => {
         />
         <button
           onClick={searchRequest}
-          className="font-bold py-2 px-4 border-slate-500"
+          className="font-bold py-2 px-2 border-slate-500"
         >
           <svg
             className="w-5 h-5 text-gray-500"
