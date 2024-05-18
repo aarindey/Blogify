@@ -99,7 +99,7 @@ blogRouter.get("/search", async (c) => {
     // @ts-ignore
     const query_string = c.req.query("q");
     // Fetch the objectIDs from the search service
-    console.log(query_string);
+    // console.log(query_string);
     const response = await fetch(
       `${SEARCH_SERVICE_URL}/search?q=${query_string}`,
       {
@@ -117,7 +117,7 @@ blogRouter.get("/search", async (c) => {
     const data = await response.json();
     // @ts-ignore
     const objectIDs = data.objectIDs;
-    console.log(objectIDs);
+    // console.log(objectIDs);
     // if (!Array.isArray(objectIDs) || objectIDs.length === 0) {
     //   throw new Error("No objectIDs found in the search results");
     // }

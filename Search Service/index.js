@@ -58,7 +58,7 @@ app.get("/search", (req, res) => {
   index
     .search(query)
     .then(({ hits }) => {
-      const objectIDs = hits.map((hit) => hit.objectID);
+      const objectIDs = hits.map((hit) => Number(hit.objectID));
       res.status(200).json({ objectIDs });
     })
     .catch((error) => {
