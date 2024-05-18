@@ -324,7 +324,7 @@ blogRouter.delete("/delete/:id", async (c) => {
       where: { id: blogId },
       data: {
         topics: {
-          disconnect: blogToDelete.topics, // Disconnect all associated topics
+          disconnect: blogToDelete.topics.map(topic => ({ id: topic.id })), // Disconnect all associated topics
         },
       },
     });
@@ -339,21 +339,23 @@ blogRouter.delete("/delete/:id", async (c) => {
 
     if (topicsToDelete.length > 0) {
       await prisma.topic.deleteMany({
-        where: { id: { in: topicsToDelete.map((topic) => topic.id) } },
+        where: { id: { in: topicsToDelete.map(topic => topic.id) } },
       });
     }
 
     return c.json({ message: "Blog successfully deleted" });
   } catch (error) {
+    console.error(error); // Log the error for debugging purposes
     c.status(500);
     return c.json({
-      error: error,
+      error: error || "Internal Server Error",
       message: "Error trying to delete a blog!",
     });
   } finally {
     await prisma.$disconnect(); // Disconnect from the database after finishing the operation
   }
 });
+
 
 blogRouter.get("/fetch", async (c) => {
   const prisma = new PrismaClient({
