@@ -7,7 +7,7 @@ const SearchBox = ({ setQueryString, searchRequest, value }) => {
         <input
           type="text"
           value={value}
-          className="border w-[10rem] md:w-[12rem] lg:w-[15rem] border-gray-300 rounded-md py-2 px-4 pl-10 focus:outline-none focus:border-blue-500"
+          className="border w-[10rem] md:w-[12rem] lg:w-[15rem] border-gray-300 rounded-md py-2 px-2 focus:outline-none focus:border-blue-500"
           placeholder="Search Box"
           onChange={(e) => {
             setQueryString(e.target.value);
