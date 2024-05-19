@@ -67,51 +67,57 @@ const ChatBox: React.FC<ChatBoxProps> = ({ title, content }) => {
   }, [qaList]);
 
   return (
-    <div className={`chatbox ${isOpen ? "open" : ""}`}>
-      <button
-        className={`toggle-button mt-2 ml-2 ${isOpen ? "open" : ""}`}
-        onClick={toggleChatbox}
-      >
-        {isOpen ? <img src={CloseIcon} alt="Close" className="logo" /> : "Q/A"}
-      </button>
-      {isOpen && (
-        <div className="chat-content">
-          <div className="messages">
-            {qaList.map((item, index) => (
-              <div key={index} className="message">
-                <div>
-                  <strong>Question:</strong> {item.question}
+    <div className={`chatbox ${isOpen ? "open" : ""} bg-blue-50 `}>
+      <div className="">
+        <button
+          className={`toggle-button mt-2 ml-2 ${isOpen ? "open" : ""}`}
+          onClick={toggleChatbox}
+        >
+          {isOpen ? (
+            <img src={CloseIcon} alt="Close" className="logo" />
+          ) : (
+            "Q/A"
+          )}
+        </button>
+        {isOpen && (
+          <div className="chat-content">
+            <div className="messages">
+              {qaList.map((item, index) => (
+                <div key={index} className="message">
+                  <div>
+                    <strong>Question:</strong> {item.question}
+                  </div>
+                  <div>
+                    <strong>Answer:</strong> {item.answer}
+                  </div>
+                  <button
+                    className="bg-red-500 p-2 mt-2 text-white hover:bg-red-600 rounded-lg"
+                    onClick={() => handleDelete(index)}
+                  >
+                    Delete
+                  </button>
                 </div>
-                <div>
-                  <strong>Answer:</strong> {item.answer}
-                </div>
-                <button
-                  className="bg-red-500 p-2 mt-2 text-white hover:bg-red-600 rounded-lg"
-                  onClick={() => handleDelete(index)}
-                >
-                  Delete
+              ))}
+              <div ref={messagesEndRef} />
+            </div>
+            <div className="input-container ">
+              <div className="input-wrapper ">
+                <input
+                  type="text"
+                  className="border-solid border-1 border-gray-300 rounded-lg"
+                  placeholder="Type your question here..."
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                />
+
+                <button onClick={handleSubmit} className="search-button">
+                  <img src={SearchIcon} alt="Search" className="Search" />
                 </button>
               </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-          <div className="input-container ">
-            <div className="input-wrapper ">
-              <input
-                type="text"
-                className="border-solid border-1 border-gray-300 rounded-lg"
-                placeholder="Type your question here..."
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-              />
-
-              <button onClick={handleSubmit} className="search-button">
-                <img src={SearchIcon} alt="Search" className="Search" />
-              </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
