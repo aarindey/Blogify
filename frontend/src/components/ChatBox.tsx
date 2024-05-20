@@ -12,9 +12,10 @@ interface QAItem {
 interface ChatBoxProps {
   title: string;
   content: string;
+  global: boolean;
 }
 
-const ChatBox: React.FC<ChatBoxProps> = ({ title, content }) => {
+const ChatBox: React.FC<ChatBoxProps> = ({ title, content, global }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
   // const [answer, setAnswer] = useState<string>("");
@@ -30,8 +31,11 @@ const ChatBox: React.FC<ChatBoxProps> = ({ title, content }) => {
 
     // Make the request to your backend API
     try {
-      const query =
+      let query =
         title + " " + content + ".In context of above information, " + question;
+      if (global) {
+        query = question;
+      }
       const response = await fetch(`${GEMINI_PRO_SERVICE}/query`, {
         method: "POST",
         headers: {

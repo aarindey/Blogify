@@ -8,6 +8,7 @@ import { SideBar } from "../components/SideBar";
 import SearchBox from "../components/SearchBox";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
+import ChatBox from "../components/ChatBox";
 
 interface Blog {
   content: string;
@@ -258,6 +259,7 @@ export const Blogs = () => {
           </div>
         </div>
       )}
+      <ChatBox title={""} content={""} global={true}></ChatBox>
     </div>
   );
 };

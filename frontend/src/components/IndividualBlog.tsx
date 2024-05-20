@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { AuthorHeader } from "./AuthorHeader";
 import { Bubble } from "./Bubble";
-import { BACKEND_URL, IMAGE_SERVICE_URL } from "../config";
+import { BACKEND_URL, GEMINI_PRO_SERVICE, IMAGE_SERVICE_URL } from "../config";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Spinner } from "./Spinner";
@@ -52,6 +52,7 @@ export const IndividualBlog = ({
   const [commentLoading, setCommentLoading] = useState(true);
   const [commentUnderEdit, setCommentUnderEdit] = useState<number>();
   const [commentEditMode, setCommentEditMode] = useState(false);
+  const [summary, setSummary] = useState<string>("");
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -172,6 +173,31 @@ export const IndividualBlog = ({
     setCommentUnderEdit(commentId);
   }
 
+  const handleSummarize = async () => {
+    // Make the request to your backend API
+    try {
+      const query =
+        blog.title +
+        " " +
+        blog.content +
+        ".Summarize the above information in short.";
+
+      const response = await fetch(`${GEMINI_PRO_SERVICE}/query`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query: query }),
+      });
+
+      const data = await response.json();
+
+      setSummary(data.response);
+    } catch (error) {
+      console.error("Error fetching answer:", error);
+    }
+  };
+
   return (
     <>
       <div className="flex px-10 pt-12">
@@ -189,7 +215,7 @@ export const IndividualBlog = ({
             <button
               onClick={handleDelete}
               type="button"
-              className="mt-1 text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-4 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2"
+              className="mt-1 text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-700 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2"
             >
               Delete
             </button>
@@ -229,6 +255,18 @@ export const IndividualBlog = ({
                 <div className="p-4">No Topics to Display</div>
               )}
             </div>
+            <div>
+              <p className="font-bold mt-10 mb-2 text-xl">Summary</p>
+
+              <button
+                onClick={handleSummarize}
+                type="submit"
+                className="text-white  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+              >
+                Ask AI to Summarize
+              </button>
+            </div>
+            <div className="mt-2">{summary}</div>
             <div>
               <p className="font-bold mt-10 mb-2 text-xl">Comments</p>
               <input
@@ -303,7 +341,11 @@ export const IndividualBlog = ({
           </div>
         </div>
       </div>{" "}
-      <ChatBox title={blog.title} content={blog.content}></ChatBox>
+      <ChatBox
+        title={blog.title}
+        content={blog.content}
+        global={false}
+      ></ChatBox>
     </>
   );
 };
